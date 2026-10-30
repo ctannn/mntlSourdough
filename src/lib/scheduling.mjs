@@ -6,6 +6,9 @@ export function isISODate(value) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 export function calgaryToday(now = new Date()) {
+  if (now.getTime() >= Date.parse('2026-03-08T09:00:00Z')) {
+    return new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  }
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Edmonton', year: 'numeric', month: '2-digit', day: '2-digit'
   }).formatToParts(now);
