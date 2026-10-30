@@ -2,6 +2,17 @@
 
 Changes that affect the customer storefront, baker operations or project architecture are recorded here.
 
+## 2026-10-29 — Safe staff demo mode and connected customer records
+
+- Added a **Try demo mode** toggle inside the authenticated admin. Sixteen fictional customers, 31 sample orders, six recurring plans, sample skips, delivery addresses, marketing consent and bake updates are generated locally. **No fake records are inserted into production Supabase or the public website.**
+- Added customer and order detail drawers with click-through links from Orders, Bake list, Customers, Subscriptions and Deliveries. Customer profiles show contact info, saved/last-delivery address, marketing consent, active/paused Bread Club plans, restricted dietary notes, lifetime paid-order totals and order history. Order panels show payment/fulfillment and priced line items.
+- Sandbox operations support demo-only customer editing, dates, manual unpaid orders, order statuses and batch-stage changes. Reset demo restores fixtures.
+- Added fixture integrity unit tests (unique IDs, PK/FK joins, payment states, total-cents snapshots, duplicate email/date rules) that must pass before Vite builds.
+- Audited all **14 live public tables** for PKs and FKs, created 10 safe secondary indexes for customer/order/subscription analytics, and documented future warehouse grains and known history/consent limitations.
+- Added [demo acceptance walkthrough](docs/DEMO-QA.md), [analytics schema and metric dictionary](docs/ANALYTICS-DATA-MODEL.md), and the reproducible [SQL index script](docs/sql/analytics_indexes.sql).
+
+**Unchanged:** payments/recurring billing remain unlaunched. All live customer/allergen records stay protected behind Supabase Auth and row-level security.
+
 ## 2026-10-29 — Editorial storefront and Original photography
 
 **Design**
