@@ -22,7 +22,7 @@ export function OpenStreetAddressPicker({value,onChange}) {
       }).addTo(instance);
       const customIcon=L.divIcon({className:'mntl-openstreet-pin',html:'<span aria-hidden="true">⌂</span>',iconSize:[34,40],iconAnchor:[17,37]});
       const pin=L.marker(start,{draggable:true,title:'Delivery entrance pin',icon:customIcon}).addTo(instance);
-      marker.current=pin;
+      marker.current=pin;pin.setOpacity(value?.location?1:0);
       function update(coords){
         const lat=Number(coords.lat),lon=Number(coords.lng);
         if(!Number.isFinite(lat)||!Number.isFinite(lon))return;
@@ -30,7 +30,7 @@ export function OpenStreetAddressPicker({value,onChange}) {
           setMessage('This preview is for Calgary addresses. Move the pin back into Calgary.');
           return;
         }
-        pin.setLatLng([lat,lon]);
+        pin.setLatLng([lat,lon]);pin.setOpacity(1);
         notify.current({location:{lat:Number(lat.toFixed(6)),lon:Number(lon.toFixed(6))},pinAdjusted:true});
         setMessage('Entrance pin saved. Please type the matching street address below.');
       }
@@ -48,7 +48,7 @@ export function OpenStreetAddressPicker({value,onChange}) {
     return()=>{active=false;intersection?.disconnect();map.current?.remove();map.current=null;marker.current=null};
   },[]);
   useEffect(()=>{
-    const p=value?.location;if(!p||!map.current||!marker.current)return;
+    const p=value?.location;if(!map.current||!marker.current)return;if(!p){marker.current.setOpacity(0);return;}marker.current.setOpacity(1);
     const next=[p.lat,p.lon];marker.current.setLatLng(next);
     map.current.panTo(next);
   },[value?.location?.lat,value?.location?.lon]);
