@@ -95,3 +95,26 @@ test('unsafe demo mutations fail closed',()=>{
     fulfillment_type:'pickup'
   }));
 });
+
+test('demo email and production-date uniqueness rules mirror Supabase constraints',()=>{
+  const data=initial();
+  assert.throws(()=>applyDemoMutation(data,'customers','POST',{
+    first_name:'Copy',last_name:'Person',full_name:'Copy Person',email:data.customers[0].email.toUpperCase()
+  }),/already exists/);
+  assert.throws(()=>applyDemoMutation(data,'bake_days','POST',{
+    bake_date:data.bake_days[0].bake_date,capacity_loaves:60,status:'open'
+  }),/already scheduled/);
+  assert.throws(()=>applyDemoMutation(data,'bake_updates','POST',{
+    bake_date:data.bake_updates[0].bake_date,stage:'ready',published:false
+  }),/already exists/);
+});
+
+test('relational checker catches orphan order items and mismatched price snapshots',()=>{
+  const data=initial();
+  const orphan=structuredClone(data);
+  orphan.order_items[0].product_id='00000000-0000-4000-8000-999999999999';
+  assert.ok(validateDemoGraph(orphan).some(s=>s.includes('order_items FK mismatch')));
+  const mismatch=structuredClone(data);
+  mismatch.orders[0].total_cents+=100;
+  assert.ok(validateDemoGraph(mismatch).some(s=>s.includes('order total mismatch')));
+});
