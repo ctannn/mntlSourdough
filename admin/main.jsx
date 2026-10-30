@@ -5,6 +5,7 @@ import './operations.css';
 import {FlaskConical} from 'lucide-react';
 import {buildDemoData,applyDemoMutation,createDemoManualOrder,validateDemoGraph} from './demoData.js';
 import {RecordInspector} from './RecordInspector.jsx';
+import {calculateProductionDay,joinOrders} from './productionMetrics.js';
 
 const URL='https://dfyzpflempgtokyhvtlo.supabase.co';
 const KEY='sb_publishable_Q0akOPZNikRT46IMxE4ddg_V59iZ90C';
@@ -64,27 +65,10 @@ function App(){
  useEffect(()=>{if(session&&role)load()},[session?.access_token,role]);
  const byCustomer=useMemo(()=>Object.fromEntries(records.customers.map(c=>[c.id,c])),[records.customers]);
  const byProduct=useMemo(()=>Object.fromEntries(records.products.map(p=>[p.id,p])),[records.products]);
- const byBake=useMemo(()=>Object.fromEntries(records.bake_days.map(d=>[d.id,d])),[records.bake_days]);
- const itemsByOrder=useMemo(()=>{const result={};for(const it of records.order_items)(result[it.order_id]??=[]).push(it);return result},[records.order_items]);
  const subItems=useMemo(()=>{const result={};for(const it of records.subscription_items)(result[it.subscription_id]??=[]).push(it);return result},[records.subscription_items]);
- const orders=useMemo(()=>records.orders.map(o=>({...o,customer:byCustomer[o.customer_id],day:byBake[o.bake_day_id]?.bake_date||'',items:itemsByOrder[o.id]||[]})).sort((a,b)=>(a.day||'9999').localeCompare(b.day||'9999')),[records.orders,byCustomer,byBake,itemsByOrder]);
- const skips=useMemo(()=>new Set(records.subscription_skips.map(s=>s.subscription_id+'|'+s.bake_date)),[records.subscription_skips]);
+ const orders=useMemo(()=>joinOrders(records),[records]);
  const today=todayMT();
- function getDay(date){
-   const actual=orders.filter(o=>o.day===date&&o.status!=='cancelled'&&o.payment_status!=='refunded'&&o.payment_status!=='failed');
-   const paid=actual.filter(o=>o.payment_status==='paid'),unpaid=actual.filter(o=>o.payment_status!=='paid');
-   const paidUnits={},projectedUnits={},unpaidUnits={};let paidCount=0,pickup=0,delivery=0,unpaidCount=0,projectedCount=0;
-   for(const o of paid){for(const i of o.items){paidUnits[i.product_id]=(paidUnits[i.product_id]||0)+i.quantity;paidCount+=i.quantity}if(o.fulfillment_type==='delivery')delivery++;else pickup++}
-   for(const o of unpaid)for(const i of o.items){unpaidCount+=i.quantity;unpaidUnits[i.product_id]=(unpaidUnits[i.product_id]||0)+i.quantity;}
-   for(const s of records.subscriptions){if(s.status!=='active'||!s.next_delivery_date||date<s.next_delivery_date||date>addDays(today,70))continue;
-     const diff=Math.round((new Date(date+'T12:00:00Z')-new Date(s.next_delivery_date+'T12:00:00Z'))/86400000);
-     const cadence=s.cadence==='biweekly'?14:7;
-     if(diff%cadence!==0||skips.has(s.id+'|'+date))continue;
-     if(paid.some(o=>o.subscription_id===s.id))continue;
-     for(const i of subItems[s.id]||[]){projectedUnits[i.product_id]=(projectedUnits[i.product_id]||0)+i.quantity;projectedCount+=i.quantity}
-   }
-   return {date,paid,unpaid,paidUnits,projectedUnits,unpaidUnits,paidCount,projectedCount,unpaidCount,pickup,delivery,scheduled:records.bake_days.find(d=>d.bake_date===date)};
- }
+ const getDay=date=>calculateProductionDay(date,today,orders,records);
  const focusDay=getDay(focus);
  const nextDays=Array.from({length:7},(_,i)=>getDay(addDays(today,i)));
  const next14=Array.from({length:14},(_,i)=>getDay(addDays(today,i)));
