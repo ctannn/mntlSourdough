@@ -1,3 +1,5 @@
+> **Current status (Oct 29, 2026):** The old demo notes below are historical. The admin now uses live Supabase data with an owner login, bake calendar, recipe totals, customer directory and baker-updated public batch status. Paid checkout and subscriptions are not live. See [the current operations/launch runbook](docs/OPERATIONS-LAUNCH-RUNBOOK.md) for accurate architecture, permissions and launch blockers.
+
 # MNTL Sourdough
 
 Premium sourdough storefront built with React + Vite. Optimized for Vercel.
