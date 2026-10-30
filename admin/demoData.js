@@ -191,7 +191,7 @@ export function applyDemoMutation(dataset,path,method,body) {
   if (!['POST','PATCH'].includes(method)) throw Error('Unsupported demo method: '+method);
   const next={...dataset,[collection]:[...dataset[collection]]};
   // Match critical production uniqueness rules during client-only practice.
-  const filterParts=filter?.match(/^([a-z_]+)=eq\\.(.+)$/);
+  const filterParts=filter?.match(/^([a-z_]+)=eq\.(.+)$/);
   const targetField=filterParts?.[1],targetValue=filterParts?.[2];
   if(collection==='customers'&&body.email){
     const duplicate=dataset.customers.some(row=>row.email?.trim().toLowerCase()===body.email.trim().toLowerCase()&&(method==='POST'||String(row[targetField])!==targetValue));
