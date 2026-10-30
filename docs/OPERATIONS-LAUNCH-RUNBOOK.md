@@ -1,10 +1,10 @@
 > **Staff training mode:** After owner/staff login, choose **Try demo mode** in the sidebar. It displays 16 fictional customers and linked orders, addresses, marketing preferences and subscriptions; clickable names open customer profiles and order histories. Sample edits remain inside browser state only and never touch Supabase or the public website. Use [the click-by-click demo checklist](DEMO-QA.md) and [the audited relational data model](ANALYTICS-DATA-MODEL.md). The production bake counts use the same tested calculation module as the demo.
 
-> **Correction:** Bake cutoff times are now calculated as 6 PM Calgary/Mountain time, including DST, regardless of the staff member's device timezone. Older language below referring to device-local is superseded.
+> **Correction:** Bake cutoff times are calculated at 6 PM Calgary bakery time. Alberta adopts permanent UTC−6 beginning Nov. 1, 2026; all client oven and cutoff time conversion is pinned to this rule, even on devices with outdated timezone databases.
 
 # MNTL Bakery Operations — Staff Guide and Launch Runbook
 
-Last updated: 2026-10-29. Project: [runmntl.com](https://runmntl.com) / [admin.html](https://runmntl.com/admin.html).
+Last updated: 2026-10-30. Project: [runmntl.com](https://runmntl.com) / [admin.html](https://runmntl.com/admin.html).
 
 ## Staff quick start
 
@@ -16,11 +16,11 @@ Last updated: 2026-10-29. Project: [runmntl.com](https://runmntl.com) / [admin.h
 6. **Customers**: first name, last name, email, phone, number of orders, and marketing consent; authorized users can add/edit. Marketing consent defaults to **off**. Do not put health or allergy notes in general contact fields.
 7. **Subscriptions**: displays billing records and potential production quantities from active subscription schedules. Forecasts are **not guaranteed paid inventory** until a paid order exists. The recurring purchase/billing workflow is not activated yet.
 8. **Deliveries**: select a date to see a pickup list and delivery queue based only on paid orders.
-9. **Live bake timer**: staff can publish a batch stage and optional estimated readiness time. The storefront's **The Oven** section shows the last published batch. This is manually updated by bakers; it is not a camera or automated oven telemetry system.
+9. **Oven countdown**: staff select a bake date, set the dough stage and the next estimated time loaves leave the oven (in Calgary/Alberta time), then publish. The small sticky customer bar counts down to this real estimate. There are no customer Start/Pause buttons and no invented countdown. See [Oven Countdown Guide](OVEN-COUNTDOWN.md).
 
 ### Scheduling bake days
 
-From **Bake calendar** or **Bake list**, select a day and choose **Schedule date** or **Bake settings**. Enter maximum capacity and status (open/closed/baking/completed). The prototype calculates a default order cutoff at **6:00 PM device-local time one day before** the bake. Treat this as a default that must be reviewed for Calgary-time staff who work remotely. Production days are **not** automatically generated. An unscheduled date does not accept online checkout.
+From **Bake calendar** or **Bake list**, select a day and choose **Schedule date** or **Bake settings**. Enter maximum capacity and status (open/closed/baking/completed). The prototype calculates the default order cutoff at **6:00 PM Alberta bakery time one day before** the bake. Alberta will remain UTC−6 year-round starting November 2026; the conversion is explicit and independent of a staff device's timezone. Production days are **not** automatically generated. An unscheduled date does not accept online checkout.
 
 ### Understanding the counts
 
@@ -61,9 +61,9 @@ All roles require an explicit active record in \`staff\`, keyed to a confirmed S
 
 ## Storefront
 
-The existing one-time cart and Bread Club interest flow still open an **email inquiry** rather than collecting payment. The public \`BakePulse\` section shows either a manually published batch from Supabase or a clearly labelled **just-for-fun, browser-only 35-minute timer**. There is no fake live oven signal.
+The existing one-time cart and Bread Club interest flow still open an **email inquiry** rather than collecting payment. The public \`StickyBakeBar\` counts down to an explicitly **baker-published future oven-ready ETA** from Supabase. With no valid ETA, it displays a neutral bakery message, and the compact \`BakePulse\` section explains the real baking updates. There is **no fake or customer-controlled timer**.
 
-Product and hero images currently point to external Unsplash URLs; a new brand hero photo has been generated separately but has **not** yet been committed into this repository as a site asset. Production images must be hosted as first-party licensed assets and verified on mobile, desktop and slow networks. Current live site imagery has not been independently verified in a rendered browser.
+Product and hero images currently use high-resolution Unsplash image URLs as licensed stand-ins. The archived compressed generated WebPs in \`public/images\` were too blurry for large image display and are not used by the current storefront. Replace these stand-ins with actual crisp MNTL product photos before paid launch and verify mobile/desktop layout. Current live site imagery has not been independently verified in a rendered browser.
 
 ## Stripe setup — not yet launched
 
