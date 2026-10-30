@@ -1,0 +1,189 @@
+/* MNTL Editorial v2 — October 2026
+   Brand direction: artisan bakery / editorial food photography / warm restraint.
+   Loaded last so legacy storefront components continue to function while design is refined.
+   Visual tokens are intentionally centralized for future developers. */
+:root{
+ --mntl-parchment:#f5efe7;
+ --mntl-paper:#fbf8f2;
+ --mntl-ink:#29211d;
+ --mntl-muted:#73665c;
+ --mntl-border:#d9c9bb;
+ --mntl-coffee:#241b17;
+ --mntl-rust:#ad7655;
+ --mntl-wheat:#e8c6a3;
+ --mntl-sans:'DM Sans',Arial,sans-serif;
+ --mntl-serif:'Cormorant Garamond',Georgia,serif;
+}
+html{scroll-padding-top:100px}
+body{background:var(--mntl-parchment);color:var(--mntl-ink);font-family:var(--mntl-sans)}
+em{color:var(--mntl-rust);font-family:var(--mntl-serif);font-style:italic}
+h1,h2,h3{letter-spacing:-.045em}
+.header{height:80px;z-index:50;background:var(--mntl-parchment);padding:0 clamp(20px,5vw,86px);border-bottom:1px solid #e7dace}
+.header .logo{font-family:'Space Grotesk',sans-serif;font-size:42px;letter-spacing:-.09em;color:var(--mntl-ink)}
+.logo span,.footer-logo span{color:var(--mntl-rust)}
+.nav{gap:clamp(16px,2.3vw,38px)}
+.nav button{font-size:11px;letter-spacing:.095em;color:#574a40;transition:color .2s}
+.nav button:hover,.footer-links a:hover{color:var(--mntl-rust)}
+.header-actions{gap:20px;color:var(--mntl-ink)}
+.location{font-size:10px;font-weight:800;letter-spacing:.12em}
+.bag span{background:var(--mntl-coffee);color:var(--mntl-paper);width:21px;height:21px;font-size:10px}
+.hero{height:clamp(650px,calc(100svh - 124px),900px);min-height:650px;max-height:900px;background:var(--mntl-coffee);position:relative;color:#faf5ee;overflow:hidden}
+.hero-photo{position:absolute;inset:0;background-size:cover;background-position:center center;filter:none;transform:scale(1.002)}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#1f1512a8,transparent 28%,transparent 76%,#1f151220)}
+.hero-content{width:100%;max-width:1100px;z-index:2;padding:clamp(65px,8.8vh,120px) 0 0 clamp(24px,6vw,110px);position:relative}
+.hero .eyebrow{font-size:10px;letter-spacing:.19em;color:#e9d5bf;gap:12px;font-weight:800}
+.hero-small-star{font-size:24px;color:#dba47a;font-weight:500;line-height:0}
+.hero h1{font-family:var(--mntl-serif);font-weight:500;font-size:clamp(92px,8.1vw,154px);line-height:.82;letter-spacing:-.058em;margin:38px 0 27px;text-transform:none;text-wrap:balance}
+.hero h1 em{color:#f0cba6;font-weight:400;white-space:nowrap;letter-spacing:-.067em}
+.hero-content>p{color:#e5d7ca;font-size:clamp(15px,1.16vw,18px);line-height:1.7;max-width:385px;margin-bottom:26px}
+.hero-actions{display:flex;align-items:center;gap:30px;flex-wrap:wrap}
+.btn{font-family:var(--mntl-sans);font-size:12px;font-weight:800;letter-spacing:.015em;padding:17px 22px;text-transform:none;transition:background .2s,color .2s,transform .2s;border-radius:2px}
+.btn.cream{background:#eac6a0;color:#29201a}
+.btn.cream:hover{background:#ffe0bf}
+.btn.dark{background:var(--mntl-coffee);color:#f7eee5}
+.hero-secondary{background:transparent;color:#f8eee2;display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;border-bottom:1px solid #d0aa83;padding:14px 1px}
+.hero-secondary:hover{color:#e9bd93}
+.hero-signature{display:flex;align-items:center;gap:25px;flex-wrap:wrap;margin-top:55px;color:#cbbbae;font-size:10px;letter-spacing:.1em;font-weight:700}
+.hero-signature span{display:inline-flex;align-items:center;gap:9px}
+.hero-signature i{height:1px;width:19px;background:#ac8066;display:inline-block}
+.hero-bottom{left:clamp(24px,6vw,110px);right:clamp(24px,6vw,110px);bottom:21px;color:#d1beae;letter-spacing:.12em}
+.hero-stamp{display:none}
+.ticker{background:#e9dacb;color:#715546;padding:16px 0;letter-spacing:.11em;font-size:11px;font-weight:800;border-bottom:1px solid #d2bfae}
+.ticker span{color:#b77857;padding:0 30px}
+.wrap{max-width:1480px;padding-left:clamp(20px,6vw,90px);padding-right:clamp(20px,6vw,90px)}
+.eyebrow{color:#99765f;letter-spacing:.14em;font-size:10px}
+.asterisk{color:#a56e4c}
+.intro{padding-top:120px;padding-bottom:65px;align-items:center}
+.intro h2,.manifesto h2,.order h2,.faq h2,.newsletter h2{font-family:var(--mntl-serif);font-weight:500;letter-spacing:-.055em;line-height:.86;font-size:clamp(70px,8vw,126px)}
+.intro h2 em,.manifesto h2 em,.order h2 em,.faq h2 em{color:#ab7154}
+.intro-right{max-width:350px}
+.intro-right p{font-size:17px;line-height:1.8;color:#564b43}
+.intro-right span{color:#98765e}
+.products{gap:26px;padding-bottom:140px}
+.product-image{aspect-ratio:.92;background:#e6dacd}
+.product-image img{object-fit:cover;object-position:67% center}
+.product-num{background:#f6ede3;color:#8a6753;font-size:10px}
+.quick-add{background:#edd7c0;color:#291e17;width:55px;height:55px;border-radius:50%;transition:background .2s,transform .2s}
+.quick-add:hover{background:#f4bd8d;transform:scale(1.06)}
+.product-line{color:#9b7660;font-size:10px;margin-top:25px;letter-spacing:.08em}
+.product-name{border-bottom:1px solid #cfbeaf;padding-top:2px}
+.product-name h3{font-family:var(--mntl-serif);font-size:clamp(39px,3vw,55px);font-weight:500;letter-spacing:-.045em;margin-bottom:13px}
+.product-name svg{width:19px;color:#9b7866}
+.product>p{color:#73665a;max-width:360px;font-size:14px;line-height:1.8}
+.text-button{font-size:11px;color:#3d2d24;border-color:#8e705e}
+.club{background:#30261f;min-height:650px;color:#f5ebe1}
+.club-art{background:radial-gradient(circle at 52% 50%,#765640,#4e3428 58%,#2d211a);position:relative}
+.club-art:after{content:'';position:absolute;inset:0;opacity:.12;background:repeating-linear-gradient(45deg,transparent 0 9px,#e8d0b6 10px 11px)}
+.club-circle{position:relative;z-index:1;width:min(32vw,450px);height:min(32vw,450px);border-color:#dfb892;box-shadow:0 0 0 23px #efbf9f12,0 0 0 46px #efbf9f0c;color:#f2e5d8;font-family:var(--mntl-serif);font-weight:500;letter-spacing:-.06em;font-size:clamp(45px,5vw,77px)}
+.club-circle span{color:#deb28e}
+.club-info{padding:95px 10%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.club-info h2{font-family:var(--mntl-serif);font-weight:500;font-size:clamp(76px,7vw,120px);letter-spacing:-.058em;line-height:.86}
+.club-info h2 em{color:#e6b58e}
+.club-info>p{color:#d3c1b4}
+.club-perks svg{color:#d7a67d}
+.club-info .eyebrow.light{color:#d5ad8c}
+.club-info .btn.cream{color:#28201c}
+.club-info small{color:#bba697}
+.manifesto{padding-top:130px;padding-bottom:130px}
+.manifesto h2{font-size:clamp(80px,8vw,126px)}
+.manifesto-grid{gap:65px;align-items:center}
+.manifesto-grid>div{padding-top:0}
+.big-copy{font-family:var(--mntl-serif);font-weight:500!important;letter-spacing:-.025em;font-size:clamp(28px,2.5vw,38px)!important;line-height:1.3!important;color:#3c2d24!important}
+.manifesto-grid p{color:#75675b}
+.values{border-color:var(--mntl-border)}
+.values svg{color:#ab7154}
+.photo-break{height:530px;background-color:#513c2f;background-position:center center}
+.photo-break:before{background:linear-gradient(transparent,#1a0f0cc2)}
+.photo-break div{font-family:var(--mntl-serif);font-size:clamp(55px,6vw,105px);font-weight:500;text-transform:none;letter-spacing:-.055em}
+.photo-break em{color:#efd1b1}
+.order{padding-top:140px;padding-bottom:130px}
+.order-heading{margin-bottom:50px}
+.order-heading p{color:#706055}
+.option-block{border-color:var(--mntl-border)}
+.step{color:#96745d}
+.choice-row button{border-color:#bfae9f;color:#4a392e}
+.choice-row button.selected{background:#e6d0bc;border-color:#b68b6e;color:#33231c}
+.order-product{border-color:#d8c8b9}
+.order-product span,.fine{color:#867568}
+.order-product button{background:#ead8c5;color:#3b281e;border-radius:50%}
+.summary{background:#e9dbcd;top:64px}
+.summary-icon{color:#ac7a5e}
+.summary h3{font-family:var(--mntl-serif);font-size:55px;font-weight:500}
+.summary>p,.summary small{color:#7b6a5c}
+.summary-line{border-color:#c9b4a1}
+.faq{border-top:1px solid var(--mntl-border);gap:90px}
+.faq-item{border-color:var(--mntl-border)}
+.faq-item button{font-size:16px;color:#3e3029}
+.faq-item p{color:#796a5e}
+.newsletter{background:#e4cdb7;color:#39291f;gap:65px}
+.newsletter .eyebrow.light{color:#7d5743}
+.newsletter h2 em{color:#a56949}
+.newsletter p{color:#6c5040}
+.newsletter form{border-color:#76513c}
+footer{background:#241b17;color:#f5e9de}
+.footer-logo{font-family:'Space Grotesk',sans-serif}
+.footer-bottom{border-color:#5d493c;color:#ad9a88}
+.drawer{background:#faf5ed}
+.drawer-head,.drawer-bottom{border-color:#d6c5b5}
+.cart-item{border-color:#d6c5b5}
+.quantity button{background:#e8d6c4}
+.empty p{color:#7b6a5e}
+.summary .btn.dark:hover,.drawer .btn.dark:hover{background:#654736}
+@media(max-width:1200px){
+ .nav{gap:16px}
+ .nav button{font-size:10px}
+ .header{padding:0 4%}
+ .hero h1{font-size:clamp(81px,9vw,119px)}
+ .hero-content{max-width:850px}
+ .hero-signature{gap:15px}
+}
+@media(max-width:900px){
+ .hero{height:720px;min-height:650px}
+ .hero-content{padding-top:85px}
+ .hero h1{font-size:clamp(75px,10vw,111px)}
+ .hero-photo{background-position:61% center}
+ .club-circle{width:33vw;height:33vw}
+ .club-info{padding:70px 8%}
+ .club-info h2{font-size:clamp(66px,7vw,95px)}
+ .intro h2,.manifesto h2,.order h2,.faq h2,.newsletter h2{font-size:clamp(68px,8vw,96px)}
+}
+@media(max-width:650px){
+ .header{height:66px}
+ .nav{top:66px;background:var(--mntl-parchment)}
+ .nav.active{gap:18px}
+ .nav button{font-size:12px}
+ .logo{font-size:36px}
+ .hero{min-height:720px;height:calc(100svh - 110px);max-height:850px}
+ .hero-photo{background-position:64% center}
+ .hero-photo:after{background:linear-gradient(to bottom,#24191233 0%,#24191238 20%,#211610a0 64%,#211610d8 100%)}
+ .hero-content{padding:100px 7% 0;max-width:100%}
+ .hero .eyebrow{font-size:9px;letter-spacing:.10em}
+ .hero h1{font-size:clamp(77px,13.7vw,110px);margin:33px 0 22px}
+ .hero h1 em{white-space:normal}
+ .hero-content>p{max-width:305px;font-size:15px;line-height:1.55}
+ .hero-actions{gap:20px}
+ .hero-secondary{font-size:11px}
+ .hero-signature{margin-top:35px;gap:11px}
+ .hero-signature span{font-size:8px}
+ .hero-signature span:last-child{display:none}
+ .hero-bottom{left:7%;right:7%;font-size:8px}
+ .ticker{font-size:10px}
+ .intro{padding-top:80px;padding-bottom:44px}
+ .intro h2,.manifesto h2,.order h2,.faq h2,.newsletter h2{font-size:clamp(73px,13vw,100px)}
+ .intro-right{margin-top:26px}
+ .products{gap:48px;padding-bottom:90px}
+ .product-image{aspect-ratio:1.04}
+ .club-art{min-height:360px}
+ .club-circle{width:260px;height:260px;font-size:52px}
+ .club-info{padding:72px 7%}
+ .club-info h2{font-size:73px}
+ .manifesto{padding-top:83px;padding-bottom:84px}
+ .manifesto-grid{gap:25px}
+ .photo-break{height:380px}
+ .order{padding-top:85px;padding-bottom:90px}
+ .order-heading{display:block}
+ .faq{padding-top:90px;padding-bottom:95px;gap:35px}
+ .newsletter{padding:75px 7%}
+ .footer-logo{font-size:86px}
+}
+@media(prefers-reduced-motion:reduce){.ticker div{animation:none}.btn,.quick-add{transition:none}}
