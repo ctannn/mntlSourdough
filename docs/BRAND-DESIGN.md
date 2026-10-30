@@ -30,6 +30,7 @@ Avoid fluorescent green, generic rounded supermarket offer cards, overly aggress
 
 - `src/style.css` contains the original site's layout primitives, sections and responsive rules.
 - `src/editorial.css` is deliberately loaded **after** `style.css`; it overrides the existing look and provides the current design tokens. Keep new design decisions in the editorial file while the storefront is being modernized. A future cleanup may fold proven overrides into component-scoped CSS to reduce specificity.
+- `src/components/Hero.jsx` owns the hero composition, image and conversion CTAs. Avoid adding more hero JSX back into `src/main.jsx`.
 - `src/components/BakeExperience.jsx` and `BakeExperience.css` own all public oven/bake-timer UI. Do not duplicate Supabase polling in the storefront component.
 - `public/images/original.webp` is a **local, compact image variant**, generated from an AI-created sourdough photo; the same source is used as the hero and Original product image. The source image is a **visual concept**, not evidence of actual produced stock.
 
@@ -52,7 +53,7 @@ Avoid fluorescent green, generic rounded supermarket offer cards, overly aggress
 
 ## Product image handoff
 
-`The Original` uses the generated/local photo `/images/original.webp`. The image is already committed to GitHub and deployed by Vercel. It is intentionally a small optimized concept variant to make local rendering reliable even when third-party networks fail. **Before paid launch, obtain real photographs of the produced loaf** and replace this image with responsive high-resolution `original-640.webp`, `original-1200.webp`, etc. Then point `photos.classic` and `photos.hero` in `src/main.jsx` to the new assets. Preserve intrinsic image dimensions, alt text and lazy loading below the fold.
+`The Original` uses the cropped concept photo `/images/original-product.webp`; the hero uses the wider `/images/original.webp`. Both optimized WebP files are committed to GitHub and served by Vercel. It is intentionally a small optimized concept variant to make local rendering reliable even when third-party networks fail. **Before paid launch, obtain real photographs of the produced loaf** and replace this image with responsive high-resolution `original-640.webp`, `original-1200.webp`, etc. Then point `photos.classic` and `photos.hero` in `src/main.jsx` to the new assets; `Hero.jsx` receives its `image` prop. Preserve intrinsic image dimensions, alt text and lazy loading below the fold.
 
 Other loaf images and the photo-break currently use third-party Unsplash references and must be replaced with brand-owned images. Until then, existing image fallback handling remains enabled.
 
