@@ -10,7 +10,7 @@ Switching Demo Mode off switches the interface back to `liveRecords`, which were
 
 ## Live schema inventory and reproducibility
 
-The introspected schema metadata is committed as [public_schema_inventory.json](sql/public_schema_inventory.json), covering **14 public tables and 100 columns**, including primary keys, foreign key metadata and RLS-enabled flags. This is a **metadata snapshot** for future developers, not an executable migration.
+The introspected schema metadata is committed as [public_schema_inventory.json](sql/public_schema_inventory.json), covering **14 public tables and 100 columns**, including primary keys, foreign key metadata and RLS-enabled flags. This is a **metadata snapshot** for future developers, not an executable migration. The 25 currently applied public RLS policies are separately captured in [rls_policy_inventory.json](sql/rls_policy_inventory.json) for security review (SQL GRANT statements are not part of that export).
 
 **Migration-history caveat:** Supabase reported **no tracked migrations** in this project even though the database contains live tables. The current schema began through SQL execution during prototyping. Before onboarding another deployment environment, reconcile the live schema with a formal baseline migration using Supabase CLI `db pull` and verify the resulting DDL, grants and RLS policies on an isolated development project. Do not blindly replay the initial draft SQL against the live database. Secondary index SQL is already versioned and safe to rerun in [analytics_indexes.sql](sql/analytics_indexes.sql).
 
