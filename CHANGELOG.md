@@ -2,6 +2,18 @@
 
 Changes that affect the customer storefront, baker operations or project architecture are recorded here.
 
+## 2026-10-30 — Bakery freshness clock and MNTL visual identity V3
+
+- **Corrected the timer's meaning:** Removed the visitor-controlled 35-minute play/pause/reset timer. The compact sticky top bar now counts down only to a published estimated oven-ready time actually set by a baker in the admin.
+- Public bakery data is read from Supabase's published-only \`bake_updates\` feed every 60 seconds. When no valid ETA exists, the site shows a factual bakery message rather than a fabricated countdown. Expired times never imply bread is ready.
+- Refined the staff **Oven countdown** screen with a required future ready time for live countdowns, preview messaging, proper loading of saved updates and time-zone handling. Demo updates remain isolated from public.
+- **Alberta Time:** Incorporated permanent UTC−6 beginning November 1, 2026, with explicit deterministic date/time handling for client browsers with older tzdata. Added oven/DST tests.
+- **Visual V3:** Replaced the prior generic serif/terracotta look with a bold Space Grotesk independent-bakery identity and an explicit left-copy/right-bread split hero. Simplified the Oven section and branding components.
+- **Image fidelity:** Removed the old small locally hosted generated WebPs from the active hero/product image paths. Temporary high-resolution licensed food photography is requested at 1,400–2,400px; replace with actual MNTL photos before paid launch.
+- Updated \`README.md\`, \`docs/BRAND-DESIGN.md\` and \`docs/OVEN-COUNTDOWN.md\`.
+
+**Release caution:** Numerous feature-branch pushes exhausted the Vercel build-rate allowance during implementation. Do not mark this design or timer as live until the GitHub main SHA has a successful READY production deployment.
+
 ## 2026-10-29 — Safe staff demo mode and connected customer records
 
 - Added a **Try demo mode** toggle inside the authenticated admin. Sixteen fictional customers, 31 sample orders, six recurring plans, sample skips, delivery addresses, marketing consent and bake updates are generated locally. **No fake records are inserted into production Supabase or the public website.**
