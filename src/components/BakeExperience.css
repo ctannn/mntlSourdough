@@ -1,0 +1,51 @@
+/* The same data powers both the site-wide sticky ribbon and the editorial Oven section.
+   Palette: espresso / parchment / terracotta, deliberately avoiding grocery-store neon green. */
+.bake-ribbon{position:sticky;top:0;z-index:70;height:44px;background:#241b17;color:#f6eee4;border-bottom:1px solid #5a453a;font-family:'DM Sans',sans-serif}
+.bake-ribbon-inner{max-width:1800px;height:100%;padding:0 clamp(18px,4.5vw,78px);margin:auto;display:flex;align-items:center;gap:17px}
+.bake-ribbon-kicker{display:inline-flex;gap:9px;align-items:center;font-size:10px;font-weight:800;letter-spacing:.13em;white-space:nowrap}
+.bake-live-dot{width:7px;height:7px;display:inline-block;background:#c58b63;border-radius:50%;box-shadow:0 0 0 3px #c58b6324}
+.bake-live-dot.is-live{background:#e3ae76;box-shadow:0 0 0 4px #e3ae7628}
+.bake-ribbon-divider{height:17px;width:1px;background:#675245}
+.bake-ribbon-status{font-size:11px;color:#cbbeb1;display:flex;align-items:center;gap:6px;min-width:0}
+.bake-ribbon-status strong{color:#fff0e3;font-weight:700}
+.bake-ribbon-clock{font:700 13px 'DM Sans',sans-serif;color:#efc698;font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:6px}
+.bake-ribbon-clock small{font:400 10px 'DM Sans',sans-serif;color:#b9a79a}
+.bake-ribbon-action{background:#e7bd95;color:#2d211b;padding:5px 11px;font-size:10px;font-weight:800;display:flex;align-items:center;gap:6px;border-radius:3px;white-space:nowrap}
+.bake-ribbon-link{margin-left:auto;color:#efe3d6;background:transparent;display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.bake-ribbon-link:hover{text-decoration:underline}
+.oven-section{background:#2a211c;color:#f3e9dc;padding:110px clamp(20px,6vw,108px) 125px;scroll-margin-top:65px}
+.oven-wrap{max-width:1420px;margin:0 auto}
+.oven-intro{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(200px,.6fr);align-items:end;gap:70px;margin-bottom:50px}
+.oven-intro .overline,.oven-aside .overline{grid-column:1/-1;color:#d2a681;font-size:10px;letter-spacing:.19em;font-weight:800;margin-bottom:4px}
+.oven-intro h2{grid-column:1;max-width:750px;font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(70px,8vw,132px);letter-spacing:-.058em;font-weight:500;line-height:.79;margin:0}
+.oven-intro h2 em{color:#ddb395;font-weight:400}
+.oven-intro>p:last-child{grid-column:2;grid-row:2;margin:0 0 6px;font-size:15px;color:#bdb0a5;max-width:330px;line-height:1.8}
+.oven-canvas{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);background:#efe6da}
+.oven-monitor{color:#33261f;padding:clamp(30px,5vw,74px);min-width:0}
+.oven-monitor-top{display:flex;align-items:center;gap:10px;letter-spacing:.13em;font-weight:800;font-size:10px}
+.oven-monitor-top svg{margin-left:auto;color:#a36b49}
+.oven-dot{height:8px;width:8px;border-radius:50%;background:#ae7656;display:inline-block}
+.oven-display-label{font-size:11px;font-weight:700;letter-spacing:.15em;color:#8a7769;margin:58px 0 12px}
+.oven-display-stage{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(61px,6.1vw,102px);font-weight:500;letter-spacing:-.05em;line-height:.8;display:block}
+.oven-stage-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:29px}
+.oven-stage-row span{border:1px solid #d1c3b2;padding:7px 9px;text-transform:uppercase;font-size:10px;letter-spacing:.04em;color:#928578}
+.oven-stage-row span.active{background:#b07755;border-color:#b07755;color:#fff}
+.oven-description{margin:33px 0 16px;font-size:16px;line-height:1.7;max-width:500px;color:#6f5c4e}
+.oven-digits{border-top:1px solid #d0c0b1;border-bottom:1px solid #d0c0b1;display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:24px 0}
+.oven-digits span{font-family:'DM Sans',sans-serif;font-size:clamp(45px,6vw,90px);font-weight:600;letter-spacing:-.09em;font-variant-numeric:tabular-nums}
+.oven-digits small{font-size:10px;letter-spacing:.13em;font-weight:800;color:#8b7b6c;max-width:115px;line-height:1.6}
+.oven-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.oven-controls button{display:inline-flex;gap:9px;align-items:center;justify-content:center;padding:14px 18px;font-weight:800;font-size:12px}
+.oven-control-primary{background:#3b2b21;color:#f6ede1}
+.oven-control-secondary{background:transparent;color:#4a372b;border:1px solid #bba997}
+.oven-fineprint{font-size:11px;color:#867568;margin:20px 0 0;line-height:1.7}
+.oven-aside{background:#b77c5e;padding:40px;display:flex;flex-direction:column;justify-content:space-between;min-height:560px;overflow:hidden}
+.oven-aside-asterisk{font-size:clamp(140px,21vw,310px);font-weight:300;line-height:.7;color:#e5c3a477;text-align:center;transform:rotate(-14deg);margin:35px -25px}
+.oven-aside .overline{color:#f6e7d7;margin-bottom:22px}
+.oven-aside strong{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(46px,4.2vw,67px);line-height:.85;letter-spacing:-.055em;color:#fff9f2;display:block}
+.oven-aside strong em{color:#f6dfbd;font-weight:400}
+.oven-aside>div>p:last-child{margin-top:23px;font-size:13px;color:#f5e1d0}
+@media(max-width:950px){.oven-intro{gap:26px}.oven-canvas{grid-template-columns:1.2fr .8fr}.oven-monitor{padding:35px}.oven-aside{padding:30px;min-height:530px}.oven-aside-asterisk{font-size:175px}}
+@media(max-width:720px){.bake-ribbon{height:46px}.bake-ribbon-inner{gap:10px;padding:0 14px}.bake-ribbon-kicker{font-size:9px}.bake-ribbon-status{font-size:10px;gap:4px}.bake-ribbon-status strong{display:none}.bake-ribbon-divider{display:none}.bake-ribbon-clock{font-size:12px}.bake-ribbon-action{padding:6px 8px;font-size:0;gap:0}.bake-ribbon-action svg{width:15px;height:15px}.bake-ribbon-link{font-size:0;gap:0}.bake-ribbon-link svg{width:18px;height:18px}.oven-section{padding:78px 6%}.oven-intro{display:block}.oven-intro h2{font-size:clamp(70px,15vw,95px);margin:20px 0}.oven-intro>p:last-child{max-width:430px}.oven-canvas{grid-template-columns:1fr}.oven-aside{min-height:360px;flex-direction:row;gap:20px;align-items:center}.oven-aside-asterisk{font-size:160px;flex:1;margin:0}.oven-aside>div{flex:1}.oven-aside strong{font-size:45px}.oven-display-label{margin-top:40px}.oven-monitor{padding:30px}.oven-digits span{font-size:58px}}
+@media(max-width:420px){.bake-ribbon-status{flex:1;white-space:nowrap;overflow:hidden}.bake-ribbon-status>span:not(.bake-ribbon-clock){display:none}.bake-ribbon-kicker{letter-spacing:.03em}.bake-ribbon-clock{margin-left:1px}.oven-aside{padding:22px}.oven-aside-asterisk{font-size:110px}.oven-aside strong{font-size:38px}}
+@media(prefers-reduced-motion:reduce){.bake-ribbon *, .oven-section *{scroll-behavior:auto!important;transition:none!important}}
