@@ -190,6 +190,21 @@ export function applyDemoMutation(dataset,path,method,body) {
   if(!DEMO_COLLECTIONS.includes(collection))throw Error('Unsupported demo operation: '+collection);
   if (!['POST','PATCH'].includes(method)) throw Error('Unsupported demo method: '+method);
   const next={...dataset,[collection]:[...dataset[collection]]};
+  // Match critical production uniqueness rules during client-only practice.
+  const filterParts=filter?.match(/^([a-z_]+)=eq\\.(.+)$/);
+  const targetField=filterParts?.[1],targetValue=filterParts?.[2];
+  if(collection==='customers'&&body.email){
+    const duplicate=dataset.customers.some(row=>row.email?.trim().toLowerCase()===body.email.trim().toLowerCase()&&(method==='POST'||String(row[targetField])!==targetValue));
+    if(duplicate)throw Error('A demo customer with this email already exists.');
+  }
+  if(collection==='bake_days'&&body.bake_date){
+    const duplicate=dataset.bake_days.some(row=>row.bake_date===body.bake_date&&(method==='POST'||String(row[targetField])!==targetValue));
+    if(duplicate)throw Error('That demo bake date is already scheduled.');
+  }
+  if(collection==='bake_updates'&&body.bake_date){
+    const duplicate=dataset.bake_updates.some(row=>row.bake_date===body.bake_date&&(method==='POST'||String(row[targetField])!==targetValue));
+    if(duplicate)throw Error('That demo batch update already exists for this date.');
+  }
   if(method==='POST'){
     const record={...body,id:body.id||crypto.randomUUID()};
     // Key shapes that don't have an id column in the real schema.
@@ -261,5 +276,17 @@ export function validateDemoGraph(dataset) {
     if(!dataset.subscriptions.some(row=>row.id===item.subscription_id)||!has('products',item.product_id))errors.push('subscription_items FK mismatch: '+item.id);
   }
   if(new Set(dataset.subscription_skips.map(row=>row.subscription_id+'|'+row.bake_date)).size!==dataset.subscription_skips.length)errors.push('duplicate composite PK in subscription_skips');
+  for(const skip of dataset.subscription_skips){
+    if(!dataset.subscriptions.some(s=>s.id===skip.subscription_id))errors.push('subscription_skips FK mismatch: '+skip.subscription_id);
+  }
+  for(const note of dataset.customer_dietary_notes){
+    if(!has('customers',note.customer_id))errors.push('customer_dietary_notes FK mismatch: '+note.customer_id);
+  }
+  for(const order of dataset.orders){
+    const lines=dataset.order_items.filter(i=>i.order_id===order.id);
+    if(lines.some(i=>!Number.isInteger(i.quantity)||i.quantity<1||!Number.isInteger(i.unit_price_cents)||i.unit_price_cents<0))errors.push('invalid order item quantity/price: '+order.id);
+    if(lines.reduce((sum,i)=>sum+i.quantity*i.unit_price_cents,0)!==order.total_cents)errors.push('order total mismatch: '+order.id);
+    if(order.subscription_id&&!dataset.subscriptions.some(sub=>sub.id===order.subscription_id))errors.push('orders subscription FK mismatch: '+order.id);
+  }
   return errors;
 }
