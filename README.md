@@ -1,39 +1,86 @@
-> **Current status (Oct 29, 2026):** The old demo notes below are historical. The admin now uses live Supabase data with an owner login, bake calendar, recipe totals, customer directory and baker-updated public batch status. Paid checkout and subscriptions are not live. See [the current operations/launch runbook](docs/OPERATIONS-LAUNCH-RUNBOOK.md) for accurate architecture, permissions and launch blockers.
-
 # MNTL Sourdough
 
-Premium sourdough storefront built with React + Vite. Optimized for Vercel.
+Small-batch sourdough in Calgary. This repository contains the public **MNTL** storefront and a staff-only bakery operations app.
 
-## Development
+**Live URLs:** [Storefront](https://runmntl.com) · [Staff dashboard](https://runmntl.com/admin) · [Operations & launch guide](docs/OPERATIONS-LAUNCH-RUNBOOK.md)
+
+> **Commerce status:** the storefront currently collects **email inquiries**, not payments. Stripe checkout, recurring billing, verified webhooks, email notifications, taxes, delivery zones and refund logic still require implementation/testing before launch. Do not imply a purchase is complete.
+
+## Stack
+
+- **React 18 + Vite** — static multipage build: `index.html` and `admin.html`.
+- **Vercel** — GitHub-connected deployment; `runmntl.com` primary, `runmntl.ca` redirects.
+- **Supabase** — staff authentication, RLS-protected operations tables, and explicitly published public batch updates.
+- **lucide-react** — interface icons.
+- **Stripe test account** — connected externally but **not integrated into the storefront**.
+
+## Getting started
+
+Requires Node.js and npm.
 
 ```bash
 npm install
 npm run dev
 npm run build
+npm run preview
 ```
 
-## Current ordering model
+Vite serves the storefront at `/` and the operations page at `/admin.html`. Vercel `vercel.json` additionally rewrites `/admin` to `/admin.html`.
 
-This is a **pre-commerce inquiry MVP**. Customers can add products, choose one-time or Bread Club interest, select pickup/delivery, and send a pre-filled order inquiry using their email client. There is **no live payment collection, inventory reservation, subscription billing, delivery quote, or customer database** yet. The newsletter is also an email request, not a persisted mailing list.
+No private API credentials are required to run the informational storefront locally. **Never commit Stripe secret keys or Supabase service-role credentials.** The `sb_publishable_…` value used in the public browser is intentionally a publishable key; RLS protects its data access.
 
-Before commercial launch, connect a checkout/payment provider, configure taxes, delivery zones, bakery production capacity, actual product photos, legal pages, refund policy, and confirmed email address. Prices and descriptions are editable placeholders and must be approved by the bakery owner.
+## Repository map
 
-## Domain
+| Path | Responsibility |
+| --- | --- |
+| `src/main.jsx` | Customer storefront: catalog, inquiry cart, brand/story sections |
+| `src/components/BakeExperience.jsx` | **Shared** batch data polling, sticky oven ribbon, interactive visitor timer, expanded Oven experience |
+| `src/components/BakeExperience.css` | Sticky ribbon and Oven styles, including mobile |
+| `src/style.css` | Existing storefront structural styles |
+| `src/editorial.css` | Current **editorial bakery design system** and its central CSS tokens; loaded after the structural styles |
+| `public/images/original.webp` | First-party locally hosted AI-generated Original loaf image used by the hero and product card |
+| `admin/main.jsx` | Operations dashboard: Auth, bakery counts/calendar, customer directory and batch publishing |
+| `admin/operations.css` | Admin page responsive and print styling |
+| `docs/OPERATIONS-LAUNCH-RUNBOOK.md` | Detailed baker instructions, data definitions, RLS, launch blockers and review steps |
+| `docs/mntl-schema-draft.sql` | Historical initial database blueprint, **not** a full snapshot of applied changes |
+| `index.html`, `admin.html`, `vite.config.js`, `vercel.json` | Application entrypoints, build and routing |
 
-Intended primary domain: runmntl.com. Secondary: runmntl.ca. Configure in Vercel only after verifying ownership and DNS routing.
+## Visual design
 
-## Images
+**Direction:** upscale independent bakery, not supermarket. The CSS tokens in `src/editorial.css` use parchment, espresso, wheat and muted terracotta; serif editorial headlines provide contrast to DM Sans UI controls.
 
-Currently uses remote Unsplash reference images. Replace with owned product photography before launch.
+The home hero deliberately pairs copy on the left with a visible sourdough loaf to the right, so there is no blank right-hand field. Its image is a generated **brand concept photograph**, not a photo of a verified physical MNTL product. Replace it with professionally photographed actual inventory before public paid launch. The same local image is used for The Original card for consistency. Later, replace any remaining third-party Unsplash image URLs for the Seeded, Weekend and crumb sections with owned imagery.
 
-## Admin implementation status (October 2026)
+The new image is checked into `public/images/`, rather than fetched from a third-party service, so it can load reliably. The original generated high-resolution PNG is retained with the project working assets and an optimized WebP is served by the site. For sharper desktop display, a future image optimization pass should replace the current compact WebP with responsive `srcset` assets.
 
-Supabase project: `dfyzpflempgtokyhvtlo` (Canada Central). Eleven bakery operations tables have been created with RLS enabled and default-deny permissions. The `/admin.html` UI is currently **sample-data-only** and has no authenticated login. Do not enter real customer or allergy data until staff RLS policies, Supabase Auth, and verified live database queries are implemented. Stripe test mode is connected to the user's account but not integrated with the storefront. A production implementation must use server-side Stripe Checkout and signature-verified webhooks; never expose secret keys in Vite browser bundles. Owner email intended for onboarding: `tancollinn@gmail.com`. Create a fresh password through a private invitation or reset link; never commit or reuse a password shared in chat.
+For the full design evolution, see [docs/BRAND-DESIGN.md](docs/BRAND-DESIGN.md).
 
-Planned secure wiring: Supabase Auth user -> staff membership -> RLS-protected tables -> orders and customer dashboard -> calendar aggregation -> Stripe webhook-driven subscription state. Vercel hosts the multipage Vite site, with public Supabase URL/publishable key in browser configuration and Stripe secret/webhook keys in server-only configuration.
+## Sticky batch ribbon / timer
 
-## Admin sign-in implementation
+`BakeExperienceProvider` is mounted once around the storefront. Both `StickyBakeBar` (top, follows scroll) and `BakePulse` (the full Oven section) read the **same** context, so the fun 35-minute timer does not restart when the visitor scrolls.
 
-`admin/main.jsx` now renders `AdminGate` before the operations demo. It authenticates against Supabase Auth password grant and then checks for an active row in `public.staff` for the authenticated user. The Supabase URL and publishable key in browser code are public identifiers, not privileged secrets. **No owner account or staff policies have been provisioned yet**; login will deny access until these are configured. The prototype data remains synthetic and must not be mistaken for live orders. The login currently keeps its session only in React state and does not implement token refresh, persistence, or sign-out; these must be completed before operational use.
+1. Every 90 seconds the client requests **published-only** `bake_updates` for today's **Calgary date**. Public RLS ensures private batch records remain inaccessible.
+2. If a public batch exists, the sticky ribbon displays its stage and optional estimated remaining time. All timings are estimates manually published by a baker, never automated sensor readings.
+3. Without an active published batch, the ribbon shows a **clearly labelled, just-for-fun visitor timer** with Start/Pause and an Oven shortcut. The expanded Oven section also has Reset.
+4. The visitor timer is in-memory only; it resets on full page reload. The top bar uses CSS `position: sticky; top: 0` and has compact responsive controls.
 
-Owner onboarding email: `tancollinn@gmail.com`. Never commit passwords or create accounts using a password exposed in chat. Provision a Supabase Auth user with a new private password, insert their UUID into `public.staff` with role `owner`, then create and test restrictive RLS policies before enabling real data access.
+The admin's **Live bake timer** tab updates the record in Supabase. No order confirmation, payment status or exact pickup time is exposed by this public tracker.
+
+## Data and security
+
+Database: Supabase project `dfyzpflempgtokyhvtlo` (Canada Central). Data tables include `staff`, `customers`, `customer_dietary_notes`, `products`, `bake_days`, `orders`, `order_items`, `subscriptions`, `subscription_items`, `subscription_skips` and `bake_updates`. Other server-only tables support future checkout reservation/event idempotency.
+
+The initial owner account has been provisioned in Supabase. Staff rows/roles and RLS policies govern access. Do not put allergy/dietary notes into public customer records; their restricted table has separate access rules. Do not display private addresses on public pages.
+
+Baker math separates **paid confirmed** quantities from **unpaid orders** and **subscription forecasts**, by bake day and recipe. That prevents forecasts from being treated as a verified payment. See the [runbook](docs/OPERATIONS-LAUNCH-RUNBOOK.md) for definitions and operational procedures.
+
+## Next launch milestones
+
+1. Finish server-only Stripe Checkout and idempotent signed webhooks; test holds, concurrency, refunds, replay protection.
+2. Implement recurring billing and renewals that create paid bake-day orders only after successful invoice payment.
+3. Configure real pickup address/hours, delivery zones/fees, bake calendar, cancellation policy and approved prices/weights/allergens.
+4. Replace conceptual imagery with photos of actual bakery products and add an optimized responsive asset pipeline.
+5. Validate real-browser desktop/mobile layout, accessibility, performance, email confirmations and end-to-end ordering.
+6. Complete Calgary/Alberta business, food-handling, privacy and tax requirements.
+
+**Contribution guideline:** keep payment and customer operations secure by default, centralize shared behavior in reusable components, preserve RLS and fail-closed logic, and update this README and the runbook with every substantial feature change.
