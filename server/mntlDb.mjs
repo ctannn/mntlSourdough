@@ -31,6 +31,7 @@ export const allowMethod=(req,res,method)=>{
   res.setHeader('Allow',method);reply(res,405,{error:'Method not allowed'});return false;
 };
 export function calgaryDate(now=new Date()) {
+  if (now.getTime() >= Date.parse('2026-03-08T09:00:00Z')) return new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString().slice(0,10);
   const fields=new Intl.DateTimeFormat('en-US',{timeZone:'America/Edmonton',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now);
   const parts=Object.fromEntries(fields.map(x=>[x.type,x.value]));
   return parts.year+'-'+parts.month+'-'+parts.day;
