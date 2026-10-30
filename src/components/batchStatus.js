@@ -10,14 +10,19 @@ export const STAGES = Object.freeze([
   'mixing', 'fermenting', 'shaping', 'proofing', 'baking', 'cooling', 'ready'
 ]);
 const DAY_MS = 24 * 60 * 60 * 1000;
+const UTC6_START=Date.parse('2026-03-08T09:00:00Z');
+const ALBERTA_OFFSET_MS=6*60*60*1000; // Permanent Alberta Time from Nov 2026; already UTC-6 since Mar 8.
 
 export function calgaryDate(nowMs) {
+  if(nowMs>=UTC6_START){
+    // Avoid obsolete client tzdata reverting Alberta to MST after Nov 1 2026.
+    return new Date(nowMs-ALBERTA_OFFSET_MS).toISOString().slice(0,10);
+  }
   const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Edmonton',
-    year: 'numeric', month: '2-digit', day: '2-digit'
+    timeZone:'America/Edmonton',year:'numeric',month:'2-digit',day:'2-digit'
   }).formatToParts(new Date(nowMs));
-  const part = Object.fromEntries(parts.map(item => [item.type, item.value]));
-  return part.year + '-' + part.month + '-' + part.day;
+  const p=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+  return p.year+'-'+p.month+'-'+p.day;
 }
 
 export function formatRemaining(ms) {
@@ -32,12 +37,13 @@ export function formatRemaining(ms) {
 }
 
 export function calgaryClock(iso) {
-  if (!iso || !Number.isFinite(Date.parse(iso))) return null;
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Edmonton',
-    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-    hour12: true
-  }).format(new Date(iso));
+  if(!iso||!Number.isFinite(Date.parse(iso)))return null;
+  const ms=Date.parse(iso);
+  const fixed=ms>=UTC6_START;
+  return new Intl.DateTimeFormat('en-CA',{
+    timeZone:fixed?'UTC':'America/Edmonton',
+    month:'short',day:'numeric',hour:'numeric',minute:'2-digit',hour12:true
+  }).format(new Date(fixed?ms-ALBERTA_OFFSET_MS:ms));
 }
 
 export function resolveFreshness(rows, nowMs) {
