@@ -82,14 +82,14 @@ function App(){
      const csv = productionCsv(days, records.products, {demo:demoEnabled});
      const filename = filenameForProduction(days, {demo:demoEnabled});
      const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
-     const url = URL.createObjectURL(blob);
+     const url = window.URL.createObjectURL(blob);
      const anchor = document.createElement('a');
      anchor.href = url;
      anchor.download = filename;
      document.body.appendChild(anchor);
      anchor.click();
      anchor.remove();
-     setTimeout(() => URL.revokeObjectURL(url), 1000);
+     setTimeout(() => window.URL.revokeObjectURL(url), 1000);
      setNotice((demoEnabled?'Demo sample':'Live')+' production CSV exported. Paid, unpaid and projected units are in separate columns.');
      setError('');
    } catch(e) {setError(handle(e));}
