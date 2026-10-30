@@ -1,5 +1,8 @@
 # MNTL Sourdough
 
+> **Admin preview (Oct 2026):** After staff login, use **Try demo mode** in the sidebar to explore 16 fictional customers, connected sample orders, subscriptions, marketing preferences and delivery addresses. No sample changes are written to Supabase. Customer names and order IDs open linked detail drawers. See [demo QA](docs/DEMO-QA.md), [data model / primary keys](docs/ANALYTICS-DATA-MODEL.md), and [fixture tests](tests/demo-data.test.mjs). The build now runs tests before Vite compilation.
+
+
 Small-batch sourdough in Calgary. This repository contains the public **MNTL** storefront and a staff-only bakery operations app.
 
 **Live URLs:** [Storefront](https://runmntl.com) · [Staff dashboard](https://runmntl.com/admin) · [Operations & launch guide](docs/OPERATIONS-LAUNCH-RUNBOOK.md)
