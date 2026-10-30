@@ -206,7 +206,7 @@ export function applyDemoMutation(dataset,path,method,body) {
     if(duplicate)throw Error('That demo batch update already exists for this date.');
   }
   if(method==='POST'){
-    const record={...body,id:body.id||crypto.randomUUID()};
+    const record={...body,id:body.id||crypto.randomUUID(),...(collection==='customers'?{created_at:new Date().toISOString()}:{} )};
     // Key shapes that don't have an id column in the real schema.
     if(collection==='bake_updates')delete record.id;
     next[collection].push(record);
