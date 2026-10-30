@@ -92,6 +92,9 @@ function App(){
  async function orderStatus(id,status){try{await mutate('orders?id=eq.'+id,'PATCH',{status})}catch{}}
  async function publishTimer(e){e.preventDefault();try{
  const eta=timerDraft.estimated_ready_at?fromCalgaryDatetimeInput(timerDraft.estimated_ready_at):null;
+ if(timerDraft.published&&eta&&timerDraft.estimated_ready_at.slice(0,10)!==focus){
+   throw Error('The oven-ready date must match the selected bake date.');
+ }
  if(timerDraft.published&&!['cooling','ready'].includes(timerDraft.stage)&&(!eta||Date.parse(eta)<=Date.now())){
    throw Error('To publish a countdown, enter a future estimated oven-ready time in Calgary time.');
  }
