@@ -1,0 +1,1311 @@
+{
+  "project": "MNTL Sourdough",
+  "schema": "public",
+  "snapshot_date": "2026-10-29",
+  "note": "Schema metadata snapshot only; not executable migration, no customer row data, secrets or keys.",
+  "tables": [
+    {
+      "name": "public.staff",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "user_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "role",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "check": "role = ANY (ARRAY['owner'::text, 'baker'::text, 'dispatcher'::text, 'support'::text])"
+        },
+        {
+          "name": "active",
+          "data_type": "boolean",
+          "format": "bool",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "true"
+        }
+      ],
+      "primary_keys": [
+        "user_id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "staff_user_id_fkey",
+          "source_table": "public.staff",
+          "source_columns": [
+            "user_id"
+          ],
+          "target_table": "auth.users",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.customers",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "full_name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "email",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "phone",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "created_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        },
+        {
+          "name": "first_name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "last_name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "marketing_opt_in",
+          "data_type": "boolean",
+          "format": "bool",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "false"
+        },
+        {
+          "name": "address_line1",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "address_line2",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "city",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "province",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "postal_code",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "customer_dietary_notes_customer_id_fkey",
+          "source_table": "public.customer_dietary_notes",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "subscriptions_customer_id_fkey",
+          "source_table": "public.subscriptions",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "orders_customer_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.customer_dietary_notes",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "customer_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "allergies",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "dietary_preferences",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "handling_notes",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "last_confirmed_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "updated_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "customer_id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "customer_dietary_notes_customer_id_fkey",
+          "source_table": "public.customer_dietary_notes",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.products",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "price_cents",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "price_cents >= 0"
+        },
+        {
+          "name": "active",
+          "data_type": "boolean",
+          "format": "bool",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "true"
+        },
+        {
+          "name": "allergen_statement",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "subscription_items_product_id_fkey",
+          "source_table": "public.subscription_items",
+          "source_columns": [
+            "product_id"
+          ],
+          "target_table": "public.products",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "order_items_product_id_fkey",
+          "source_table": "public.order_items",
+          "source_columns": [
+            "product_id"
+          ],
+          "target_table": "public.products",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.bake_days",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "bake_date",
+          "data_type": "date",
+          "format": "date",
+          "options": [
+            "updatable",
+            "unique"
+          ]
+        },
+        {
+          "name": "cutoff_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "capacity_loaves",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "capacity_loaves >= 0"
+        },
+        {
+          "name": "status",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'open'::text",
+          "check": "status = ANY (ARRAY['open'::text, 'closed'::text, 'baking'::text, 'completed'::text])"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "checkout_holds_bake_day_id_fkey",
+          "source_table": "public.checkout_holds",
+          "source_columns": [
+            "bake_day_id"
+          ],
+          "target_table": "public.bake_days",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "orders_bake_day_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "bake_day_id"
+          ],
+          "target_table": "public.bake_days",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.subscriptions",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "customer_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "stripe_subscription_id",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable",
+            "unique"
+          ]
+        },
+        {
+          "name": "cadence",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "check": "cadence = ANY (ARRAY['weekly'::text, 'biweekly'::text])"
+        },
+        {
+          "name": "weekday",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "weekday >= 0 AND weekday <= 6"
+        },
+        {
+          "name": "next_delivery_date",
+          "data_type": "date",
+          "format": "date",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "fulfillment_type",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "check": "fulfillment_type = ANY (ARRAY['pickup'::text, 'delivery'::text])"
+        },
+        {
+          "name": "status",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'draft'::text",
+          "check": "status = ANY (ARRAY['draft'::text, 'active'::text, 'paused'::text, 'past_due'::text, 'cancelled'::text])"
+        },
+        {
+          "name": "created_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "subscription_items_subscription_id_fkey",
+          "source_table": "public.subscription_items",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "orders_subscription_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "subscriptions_customer_id_fkey",
+          "source_table": "public.subscriptions",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "subscription_skips_subscription_id_fkey",
+          "source_table": "public.subscription_skips",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.subscription_items",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "subscription_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "product_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "quantity",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "quantity > 0"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "subscription_items_product_id_fkey",
+          "source_table": "public.subscription_items",
+          "source_columns": [
+            "product_id"
+          ],
+          "target_table": "public.products",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "subscription_items_subscription_id_fkey",
+          "source_table": "public.subscription_items",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.subscription_skips",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "subscription_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "bake_date",
+          "data_type": "date",
+          "format": "date",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "reason",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        }
+      ],
+      "primary_keys": [
+        "subscription_id",
+        "bake_date"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "subscription_skips_subscription_id_fkey",
+          "source_table": "public.subscription_skips",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.orders",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "customer_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "subscription_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "bake_day_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "status",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'new'::text",
+          "check": "status = ANY (ARRAY['new'::text, 'baking'::text, 'ready'::text, 'completed'::text, 'cancelled'::text])"
+        },
+        {
+          "name": "fulfillment_type",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "check": "fulfillment_type = ANY (ARRAY['pickup'::text, 'delivery'::text])"
+        },
+        {
+          "name": "payment_status",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'unpaid'::text",
+          "check": "payment_status = ANY (ARRAY['unpaid'::text, 'paid'::text, 'refunded'::text, 'failed'::text])"
+        },
+        {
+          "name": "stripe_checkout_session_id",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable",
+            "unique"
+          ]
+        },
+        {
+          "name": "delivery_address",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "delivery_notes",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "total_cents",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "0",
+          "check": "total_cents >= 0"
+        },
+        {
+          "name": "created_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        },
+        {
+          "name": "fulfillment_window",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "stripe_payment_intent_id",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable",
+            "unique"
+          ]
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "orders_bake_day_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "bake_day_id"
+          ],
+          "target_table": "public.bake_days",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "orders_subscription_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "subscription_id"
+          ],
+          "target_table": "public.subscriptions",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "orders_customer_id_fkey",
+          "source_table": "public.orders",
+          "source_columns": [
+            "customer_id"
+          ],
+          "target_table": "public.customers",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "order_items_order_id_fkey",
+          "source_table": "public.order_items",
+          "source_columns": [
+            "order_id"
+          ],
+          "target_table": "public.orders",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.order_items",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "order_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "product_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "quantity",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "quantity > 0"
+        },
+        {
+          "name": "unit_price_cents",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "unit_price_cents >= 0"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "order_items_product_id_fkey",
+          "source_table": "public.order_items",
+          "source_columns": [
+            "product_id"
+          ],
+          "target_table": "public.products",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "name": "order_items_order_id_fkey",
+          "source_table": "public.order_items",
+          "source_columns": [
+            "order_id"
+          ],
+          "target_table": "public.orders",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.audit_events",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "actor_user_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "action",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "entity_type",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "entity_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "occurred_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "audit_events_actor_user_id_fkey",
+          "source_table": "public.audit_events",
+          "source_columns": [
+            "actor_user_id"
+          ],
+          "target_table": "auth.users",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.bake_updates",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "bake_date",
+          "data_type": "date",
+          "format": "date",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "stage",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'mixing'::text",
+          "check": "stage = ANY (ARRAY['mixing'::text, 'fermenting'::text, 'shaping'::text, 'proofing'::text, 'baking'::text, 'cooling'::text, 'ready'::text])"
+        },
+        {
+          "name": "started_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "estimated_ready_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "public_note",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "published",
+          "data_type": "boolean",
+          "format": "bool",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "false"
+        },
+        {
+          "name": "updated_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "bake_date"
+      ]
+    },
+    {
+      "name": "public.checkout_holds",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "gen_random_uuid()"
+        },
+        {
+          "name": "bake_day_id",
+          "data_type": "uuid",
+          "format": "uuid",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "items",
+          "data_type": "jsonb",
+          "format": "jsonb",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "quantity",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "quantity >= 1 AND quantity <= 50"
+        },
+        {
+          "name": "total_cents",
+          "data_type": "integer",
+          "format": "int4",
+          "options": [
+            "updatable"
+          ],
+          "check": "total_cents >= 0"
+        },
+        {
+          "name": "first_name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "last_name",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "email",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "phone",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "fulfillment_type",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "check": "fulfillment_type = ANY (ARRAY['pickup'::text, 'delivery'::text])"
+        },
+        {
+          "name": "fulfillment_window",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "delivery_address",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "delivery_notes",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable"
+          ]
+        },
+        {
+          "name": "stripe_checkout_session_id",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "nullable",
+            "updatable",
+            "unique"
+          ]
+        },
+        {
+          "name": "status",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "'pending'::text",
+          "check": "status = ANY (ARRAY['pending'::text, 'paid'::text, 'expired'::text])"
+        },
+        {
+          "name": "expires_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "(now() + '00:35:00'::interval)"
+        },
+        {
+          "name": "created_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "id"
+      ],
+      "foreign_key_constraints": [
+        {
+          "name": "checkout_holds_bake_day_id_fkey",
+          "source_table": "public.checkout_holds",
+          "source_columns": [
+            "bake_day_id"
+          ],
+          "target_table": "public.bake_days",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "public.stripe_events",
+      "rls_enabled": true,
+      "columns": [
+        {
+          "name": "event_id",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "event_type",
+          "data_type": "text",
+          "format": "text",
+          "options": [
+            "updatable"
+          ]
+        },
+        {
+          "name": "processed_at",
+          "data_type": "timestamp with time zone",
+          "format": "timestamptz",
+          "options": [
+            "updatable"
+          ],
+          "default_value": "now()"
+        }
+      ],
+      "primary_keys": [
+        "event_id"
+      ]
+    }
+  ]
+}
