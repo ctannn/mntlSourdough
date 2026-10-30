@@ -19,6 +19,10 @@ This is a production-bound bakery website. Prefer clear, reversible changes over
 - [Design specification](docs/BRAND-DESIGN.md): visual tokens, hero, timer and photo strategy.
 - [Operations guide](docs/OPERATIONS-LAUNCH-RUNBOOK.md): baker workflow and launch gating.
 
+## Release discipline
+
+All engineers follow [the shared release and collaboration policy](docs/ENGINEERING-RELEASE-POLICY.md). Routine commits and pull requests are validated by GitHub Actions; do **not** request Vercel deployments for every commit. Meaningful release commits use the `[deploy]` marker and are coordinated with the other engineer, aiming for only 1–3 intentional deployments per day. Before a release confirm that the Vercel Ignored Build Step matches the documented rule.
+
 ## Release check
 
 A change is *committed* when GitHub confirms its commit SHA. It is *deployed* only when Vercel reports a READY production deployment with that SHA assigned to `runmntl.com`. Browser/mobile tests must be explicitly verified, not inferred from a build.
