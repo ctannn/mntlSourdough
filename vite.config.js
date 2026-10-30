@@ -1,0 +1,1 @@
+import {defineConfig} from 'vite';import {resolve} from 'node:path';export default defineConfig({build:{rollupOptions:{input:{storefront:resolve(import.meta.dirname,'index.html'),operations:resolve(import.meta.dirname,'admin.html')}}}});
