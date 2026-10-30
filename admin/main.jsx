@@ -2,6 +2,9 @@ import React,{useEffect,useMemo,useState} from 'react';
 import{createRoot}from 'react-dom/client';
 import{LayoutDashboard,CalendarDays,ChefHat,ClipboardList,Truck,Users,Repeat2,Settings,LogOut,RefreshCw,Plus,Search,Printer,ArrowRight,Clock3,Flame,CheckCircle2,AlertCircle,ChevronLeft,ChevronRight,Package,ShieldCheck,MapPin}from 'lucide-react';
 import './operations.css';
+import {FlaskConical} from 'lucide-react';
+import {buildDemoData,applyDemoMutation,createDemoManualOrder,validateDemoGraph} from './demoData.js';
+import {RecordInspector} from './RecordInspector.jsx';
 
 const URL='https://dfyzpflempgtokyhvtlo.supabase.co';
 const KEY='sb_publishable_Q0akOPZNikRT46IMxE4ddg_V59iZ90C';
@@ -38,7 +41,12 @@ function App(){
  const[role,setRole]=useState('');
  const[authChecking,setAuthChecking]=useState(Boolean(session));
  const[tab,setTab]=useState('Overview');
- const[records,setRecords]=useState({customers:[],products:[],bake_days:[],orders:[],order_items:[],subscriptions:[],subscription_items:[],subscription_skips:[],bake_updates:[]});
+ const[liveRecords,setLiveRecords]=useState({customers:[],products:[],bake_days:[],orders:[],order_items:[],subscriptions:[],subscription_items:[],subscription_skips:[],bake_updates:[],customer_dietary_notes:[]});
+ const[demoEnabled,setDemoEnabled]=useState(()=>sessionStorage.getItem('mntl-demo-mode')==='1');
+ const[demoRecords,setDemoRecords]=useState(()=>buildDemoData(todayMT()));
+ const[inspector,setInspector]=useState(null);
+ const records=demoEnabled?demoRecords:liveRecords;
+ useEffect(()=>{sessionStorage.setItem('mntl-demo-mode',demoEnabled?'1':'0')},[demoEnabled]);
  const[loading,setLoading]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('');
  const[focus,setFocus]=useState(todayMT()),[calendarMonth,setCalendarMonth]=useState(monthStart(todayMT()));
  const[search,setSearch]=useState(''),[statusFilter,setStatusFilter]=useState('all'),[modal,setModal]=useState(null);
@@ -50,9 +58,9 @@ function App(){
  const canManage=role==='owner'||role==='baker';
  const owner=role==='owner';
  function saveSession(s){sessionStorage.setItem('mntl-session',JSON.stringify(s));setSession(s)}
- function signOut(){sb('/auth/v1/logout',session?.access_token,{method:'POST'}).catch(()=>{});sessionStorage.removeItem('mntl-session');setSession(null);setRole('');setRecords({customers:[],products:[],bake_days:[],orders:[],order_items:[],subscriptions:[],subscription_items:[],subscription_skips:[],bake_updates:[]})}
+ function signOut(){sb('/auth/v1/logout',session?.access_token,{method:'POST'}).catch(()=>{});sessionStorage.removeItem('mntl-session');sessionStorage.removeItem('mntl-demo-mode');setSession(null);setRole('');setDemoEnabled(false);setInspector(null);setLiveRecords({customers:[],products:[],bake_days:[],orders:[],order_items:[],subscriptions:[],subscription_items:[],subscription_skips:[],bake_updates:[],customer_dietary_notes:[]})}
  useEffect(()=>{if(!session)return;let alive=true;async function validate(){try{let s=session;if(s.expires_at&&s.expires_at*1000<Date.now()+90000){s=await authRequest('refresh_token',{refresh_token:s.refresh_token});if(alive)saveSession(s)}const staff=await sb('/rest/v1/staff?select=role,active&user_id=eq.'+s.user.id,s.access_token);if(!staff.some(x=>x.active))throw Error('Staff access has been revoked.');if(alive){setRole(staff.find(x=>x.active).role);setAuthChecking(false)}}catch(e){if(alive){signOut();setAuthChecking(false)}}}validate();const timer=setInterval(validate,55000);return()=>{alive=false;clearInterval(timer)}},[session?.user?.id]);
- async function load(){if(!session||!role)return;setLoading(true);setError('');try{const names=['customers','products','bake_days','orders','order_items','subscriptions','subscription_items','subscription_skips','bake_updates'];const entries=await Promise.all(names.map(async name=>[name,await sb('/rest/v1/'+name+'?select=*&limit=1000',session.access_token)]));setRecords(Object.fromEntries(entries))}catch(e){setError(handle(e))}finally{setLoading(false)}}
+ async function load(){if(!session||!role)return;setLoading(true);setError('');try{const names=['customers','products','bake_days','orders','order_items','subscriptions','subscription_items','subscription_skips','bake_updates',...(role==='owner'||role==='baker'?['customer_dietary_notes']:[])];const entries=await Promise.all(names.map(async name=>[name,await sb('/rest/v1/'+name+'?select=*&limit=1000',session.access_token)]));setLiveRecords({...Object.fromEntries(entries),customer_dietary_notes:entries.find(([name])=>name==='customer_dietary_notes')?.[1]||[]})}catch(e){setError(handle(e))}finally{setLoading(false)}}
  useEffect(()=>{if(session&&role)load()},[session?.access_token,role]);
  const byCustomer=useMemo(()=>Object.fromEntries(records.customers.map(c=>[c.id,c])),[records.customers]);
  const byProduct=useMemo(()=>Object.fromEntries(records.products.map(p=>[p.id,p])),[records.products]);
@@ -83,7 +91,11 @@ function App(){
  const pendingPayment=orders.filter(o=>o.payment_status==='unpaid'&&o.status!=='cancelled').length;
  const activeSubs=records.subscriptions.filter(s=>s.status==='active').length;
  function chooseDay(date,section='Bake list'){setFocus(date);setTab(section);setModal(null)}
- async function mutate(path,method,body){setNotice('');setError('');try{await sb('/rest/v1/'+path,session.access_token,{method,body,headers:{Prefer:'return=representation'}});await load();setNotice('Saved to the bakery database.');setModal(null)}catch(e){setError(handle(e));throw e}}
+ async function mutate(path,method,body){setNotice('');setError('');try{
+ if(demoEnabled){setDemoRecords(applyDemoMutation(demoRecords,path,method,body));setNotice('Saved in demo only. Supabase data was not changed.');}
+ else{await sb('/rest/v1/'+path,session.access_token,{method,body,headers:{Prefer:'return=representation'}});await load();setNotice('Saved to the bakery database.');}
+ setModal(null)
+ }catch(e){setError(handle(e));throw e}}
  function openManual(){setManualDraft({customer_id:records.customers[0]?.id||'',bake_day_id:records.bake_days.find(d=>d.bake_date>=todayMT())?.id||'',product_id:records.products[0]?.id||'',quantity:1,fulfillment_type:'pickup',fulfillment_window:'',delivery_address:''});setModal('manual')}
  async function saveManual(e){e.preventDefault();setError('');try{await sb('/rest/v1/rpc/create_manual_order',session.access_token,{method:'POST',body:{p_customer_id:manualDraft.customer_id,p_bake_day_id:manualDraft.bake_day_id,p_product_id:manualDraft.product_id,p_quantity:Number(manualDraft.quantity),p_fulfillment_type:manualDraft.fulfillment_type,p_fulfillment_window:manualDraft.fulfillment_window||null,p_delivery_address:manualDraft.fulfillment_type==='delivery'?manualDraft.delivery_address||null:null}});setModal(null);setNotice('Manual order recorded as UNPAID. Confirm collection before counting it as a paid bake.');await load()}catch(e){setError(handle(e))}}
  async function saveCustomer(e){e.preventDefault();const first=customerDraft.first_name.trim(),last=customerDraft.last_name.trim();if(!first||!last)return;const body={...customerDraft,first_name:first,last_name:last,full_name:first+' '+last,email:customerDraft.email.trim()||null,phone:customerDraft.phone.trim()||null};try{if(customerDraft.id)await mutate('customers?id=eq.'+customerDraft.id,'PATCH',body);else await mutate('customers','POST',body)}catch{}}
