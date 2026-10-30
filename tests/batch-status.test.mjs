@@ -38,6 +38,12 @@ test('Calgary bakery date handles local midnight and daylight saving boundaries'
   assert.ok(calgaryClock(base.estimated_ready_at).includes('Oct'));
 });
 
+test('permanent Alberta Time stays UTC-6 in winter despite old device timezone databases',()=>{
+  assert.equal(calgaryDate(Date.parse('2026-12-01T05:59:00Z')),'2026-11-30');
+  assert.equal(calgaryDate(Date.parse('2026-12-01T06:01:00Z')),'2026-12-01');
+  assert.match(calgaryClock('2026-12-16T00:30:00Z'),/Dec 15/);
+});
+
 test('old-day statuses and malformed future estimates never look live',()=>{
   const old={...base,bake_date:'2026-10-29'};
   assert.equal(resolveFreshness([old],NOW).kind,'idle');
