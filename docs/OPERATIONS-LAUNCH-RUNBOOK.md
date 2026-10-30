@@ -85,3 +85,11 @@ Required to complete before collecting payments:
 - Enable Supabase Auth leaked-password protection if your plan supports it (security advisor currently warns it is disabled).
 
 **Launch status: operations foundation usable for secure staff planning, customer storefront informational/inquiry-only, not ready for paid order launch.** Avoid marketing any date as available for purchase until the payment and capacity system is fully tested.
+
+## Calgary/Alberta legal references to verify before launch
+
+- City of Calgary home-based food business guidance: https://www.calgary.ca/for-business/licences/home-based-food-business.html — bakery operators may need a Food Service - Premises business licence and location approval; location and inspection requirements depend on setup and customer pickup frequency. Verify directly with the City for your kitchen and pickup model.
+- Government of Alberta low-risk home-prepared food guidance: https://www.alberta.ca/low-risk-home-prepared-foods — low-risk foods can be sold directly to consumers and online subject to restrictions, food handling and labelling. Confirm sourdough flavours/add-ins meet the applicable category.
+- CRA GST/HST place-of-supply guidance: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/charge-collect-place-supply.html — basic groceries may be zero-rated; confirm treatment of your specific loaves, delivery fees and registration obligations with a qualified advisor.
+
+Do not infer that the low-risk provincial food exemption removes municipal licence/location approval requirements. Customer pickup at a residence may affect zoning and approvals.
