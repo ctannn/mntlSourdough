@@ -2,57 +2,42 @@ import React from 'react';
 import {ArrowRight, ArrowUpRight} from 'lucide-react';
 
 /**
- * Primary storefront hero.
- * The artwork is a locally hosted brand concept (public/images/original.webp).
- * Copy is intentionally understated: warmth, craft and one clear shopping CTA.
+ * Image-led MNTL hero. A clean product-first layout rather than a generic
+ * editorial/AI-ad template. The bread photograph receives the full right
+ * side; headline and CTAs remain readable without text painted over food.
  */
 export function Hero({image, onShop, onStory}) {
-  const backgroundImage =
-    "linear-gradient(90deg, rgba(31,23,19,.88) 0%, rgba(31,23,19,.60) 35%, rgba(31,23,19,.03) 76%), url('" +
-    image +
-    "')";
-
   return (
     <section className="hero" aria-labelledby="hero-heading">
-      <div
-        className="hero-photo"
-        style={{backgroundImage}}
-        role="img"
-        aria-label="Golden artisan sourdough loaf resting on linen in a warmly lit bakery"
-      />
       <div className="hero-content">
-        <div className="eyebrow light">
-          <span className="hero-small-star" aria-hidden="true">✳</span>
-          CALGARY SOURDOUGH / MADE SLOWLY
+        <div className="hero-kicker"><span aria-hidden="true" className="hero-kicker-dot" />
+          MNTL SOURDOUGH <span className="hero-kicker-slash">/</span> CALGARY, AB
         </div>
         <h1 id="hero-heading">
-          It's just
-          <br />
-          bread.
-          <br />
-          <em>Until it isn't.</em>
+          <span>IT'S JUST</span>
+          <span>BREAD.</span>
+          <span className="hero-heading-bottom">UNTIL IT ISN'T.</span>
         </h1>
-        <p>
-          Long fermentation. Golden crusts. The kind of bread you plan your
-          morning around.
-        </p>
+        <p>Slow fermented. Crackly crust. Made with an unreasonable amount of care.</p>
         <div className="hero-actions">
-          <button className="btn cream" type="button" onClick={onShop}>
-            Meet your next loaf <ArrowUpRight size={19} />
+          <button className="hero-button" type="button" onClick={onShop}>
+            SHOP THE LOAVES <ArrowUpRight size={18} />
           </button>
-          <button className="hero-secondary" type="button" onClick={onStory}>
-            Our story <ArrowRight size={17} />
+          <button className="hero-text-link" type="button" onClick={onStory}>
+            GET TO KNOW MNTL <ArrowRight size={17} />
           </button>
         </div>
-        <div className="hero-signature" aria-label="Our bakery values">
-          <span>01 <i aria-hidden="true" /> REAL INGREDIENTS</span>
-          <span>02 <i aria-hidden="true" /> SLOW FERMENTATION</span>
-          <span>03 <i aria-hidden="true" /> SMALL-BATCH BAKING</span>
+        <div className="hero-signature">
+          <span><b>01</b> NATURALLY FERMENTED</span>
+          <span><b>02</b> SMALL BATCH</span>
+          <span><b>03</b> NEVER RUSHED</span>
         </div>
       </div>
-      <div className="hero-bottom">
-        <span>GOOD BREAD. QUESTIONABLE OBSESSION.</span>
-        <span>SCROLL TO EXPLORE ↓</span>
+      <div className="hero-visual">
+        <img src={image} alt="Rustic, golden-crusted artisan sourdough bread"
+             fetchPriority="high" decoding="async"/>
+        <span className="hero-visual-label">MADE SLOWLY. GONE QUICKLY.</span>
+        <span className="hero-photo-index" aria-hidden="true">MNTL / 001</span>
       </div>
     </section>
   );
