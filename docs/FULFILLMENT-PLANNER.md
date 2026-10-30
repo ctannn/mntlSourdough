@@ -4,7 +4,7 @@
 
 ## Delivered customer experience
 
-- Responsive bake calendar with first requested date, weekly or biweekly recurrence and upcoming-date preview. Date-only calculations use Calgary's timezone and are DST-safe.
+- Responsive bake calendar with first requested date, weekly or biweekly recurrence and upcoming-date preview. Date-only calculations follow MNTL's permanent Alberta UTC−6 time convention from March 8, 2026, consistent with the production bake timer, and preserve historical timezone rules for earlier dates.
 - Public availability display fetched from `GET /api/availability` when server-side Supabase credentials are configured. Only dates with positive remaining capacity before the cutoff are shown as bookable.
 - Customer pickup or delivery selection. Delivery map is interactive **without a Google key** using Leaflet and OpenStreetMap tiles. Tap to place the home entrance pin, drag to fine-tune, or manually enter an address.
 - Optional Google Places autocomplete and a draggable Google Maps pin when `VITE_GOOGLE_MAPS_JS_KEY` is configured. The user can also change the street address manually.
