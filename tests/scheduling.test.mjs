@@ -19,6 +19,8 @@ test('date controls handle month and year boundaries', () => {
 test('Calgary calendar day does not depend on browser timezone', () => {
   assert.equal(calgaryToday(new Date('2026-10-31T05:00:00Z')), '2026-10-30');
   assert.equal(calgaryToday(new Date('2026-11-01T07:00:00Z')), '2026-11-01');
+  assert.equal(calgaryToday(new Date('2026-11-01T06:30:00Z')), '2026-11-01');
+  assert.equal(calgaryToday(new Date('2026-12-01T05:45:00Z')), '2026-11-30');
   assert.ok(readableDate('2026-11-07').includes('Nov'));
 });
 test('recurrences fail closed on invalid dates or frequencies', () => {
