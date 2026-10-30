@@ -103,7 +103,7 @@ function App(){
  function startTimer(date){setFocus(date);const s=records.bake_updates.find(x=>x.bake_date===date);setTimerDraft({stage:s?.stage||'mixing',published:s?.published||false,public_note:s?.public_note||'Fresh bread is in the works!',estimated_ready_at:toCalgaryDatetimeInput(s?.estimated_ready_at)});setTab('Oven countdown')}
  function openCustomer(c){setCustomerDraft(c?{...c,first_name:c.first_name||c.full_name?.split(' ')[0]||'',last_name:c.last_name||c.full_name?.split(' ').slice(1).join(' ')||'',email:c.email||'',phone:c.phone||''}:{first_name:'',last_name:'',email:'',phone:'',marketing_opt_in:false});setModal('customer')}
  function openDay(date){const b=records.bake_days.find(d=>d.bake_date===date);setDayDraft({bake_date:date,capacity_loaves:b?.capacity_loaves??60,status:b?.status||'open'});setModal('bake')}
- function goTab(t){setTab(t);setError('');setNotice('');setSearch('');setStatusFilter('all')}
+ function goTab(t){if(t==='Oven countdown')startTimer(focus);else setTab(t);setError('');setNotice('');setSearch('');setStatusFilter('all')}
  function toggleDemo(){setDemoEnabled(v=>!v);setInspector(null);setModal(null);setSearch('');setStatusFilter('all');setNotice('');setError('');setTab('Overview');setFocus(todayMT());setCalendarMonth(monthStart(todayMT()))}
  function resetDemo(){setDemoRecords(buildDemoData(todayMT()));setInspector(null);setModal(null);setNotice('Demo records restored. No real customer data was touched.')}
  function openCustomerInfo(id){if(id)setInspector({type:'customer',id})}
