@@ -33,12 +33,14 @@ No private API credentials are required to run the informational storefront loca
 
 | Path | Responsibility |
 | --- | --- |
-| `src/main.jsx` | Customer storefront: catalog, inquiry cart, brand/story sections |
+| `src/main.jsx` | Storefront composition: catalog, inquiry cart, story sections and shared page state |
+| `src/components/Hero.jsx` | Independent editorial hero, artwork/copy and primary conversion CTAs |
 | `src/components/BakeExperience.jsx` | **Shared** batch data polling, sticky oven ribbon, interactive visitor timer, expanded Oven experience |
 | `src/components/BakeExperience.css` | Sticky ribbon and Oven styles, including mobile |
 | `src/style.css` | Existing storefront structural styles |
 | `src/editorial.css` | Current **editorial bakery design system** and its central CSS tokens; loaded after the structural styles |
-| `public/images/original.webp` | First-party locally hosted AI-generated Original loaf image used by the hero and product card |
+| `public/images/original.webp` | Locally hosted AI-generated Original **hero** image |
+| `public/images/original-product.webp` | Locally hosted AI-generated cropped Original **product card** image |
 | `admin/main.jsx` | Operations dashboard: Auth, bakery counts/calendar, customer directory and batch publishing |
 | `admin/operations.css` | Admin page responsive and print styling |
 | `docs/OPERATIONS-LAUNCH-RUNBOOK.md` | Detailed baker instructions, data definitions, RLS, launch blockers and review steps |
@@ -49,9 +51,9 @@ No private API credentials are required to run the informational storefront loca
 
 **Direction:** upscale independent bakery, not supermarket. The CSS tokens in `src/editorial.css` use parchment, espresso, wheat and muted terracotta; serif editorial headlines provide contrast to DM Sans UI controls.
 
-The home hero deliberately pairs copy on the left with a visible sourdough loaf to the right, so there is no blank right-hand field. Its image is a generated **brand concept photograph**, not a photo of a verified physical MNTL product. Replace it with professionally photographed actual inventory before public paid launch. The same local image is used for The Original card for consistency. Later, replace any remaining third-party Unsplash image URLs for the Seeded, Weekend and crumb sections with owned imagery.
+The home hero deliberately pairs copy on the left with a visible sourdough loaf to the right, so there is no blank right-hand field. Its image is a generated **brand concept photograph**, not a photo of a verified physical MNTL product. Replace it with professionally photographed actual inventory before public paid launch. A complementary crop of the same generated loaf is used for The Original product card. Later, replace any remaining third-party Unsplash image URLs for the Seeded, Weekend and crumb sections with owned imagery.
 
-The new image is checked into `public/images/`, rather than fetched from a third-party service, so it can load reliably. The original generated high-resolution PNG is retained with the project working assets and an optimized WebP is served by the site. For sharper desktop display, a future image optimization pass should replace the current compact WebP with responsive `srcset` assets.
+The new image is checked into `public/images/`, rather than fetched from a third-party service, so it can load reliably. The high-resolution generated PNG is available as a conversation working asset, but is not committed as the served website asset; two compact WebP derivatives are versioned in GitHub. For sharper desktop display, a future image optimization pass should replace the current compact WebP with responsive `srcset` assets.
 
 For the full design evolution, see [docs/BRAND-DESIGN.md](docs/BRAND-DESIGN.md).
 
