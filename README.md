@@ -23,3 +23,9 @@ Intended primary domain: runmntl.com. Secondary: runmntl.ca. Configure in Vercel
 ## Images
 
 Currently uses remote Unsplash reference images. Replace with owned product photography before launch.
+
+## Admin implementation status (October 2026)
+
+Supabase project: `dfyzpflempgtokyhvtlo` (Canada Central). Eleven bakery operations tables have been created with RLS enabled and default-deny permissions. The `/admin.html` UI is currently **sample-data-only** and has no authenticated login. Do not enter real customer or allergy data until staff RLS policies, Supabase Auth, and verified live database queries are implemented. Stripe test mode is connected to the user's account but not integrated with the storefront. A production implementation must use server-side Stripe Checkout and signature-verified webhooks; never expose secret keys in Vite browser bundles. Owner email intended for onboarding: `tancollinn@gmail.com`. Create a fresh password through a private invitation or reset link; never commit or reuse a password shared in chat.
+
+Planned secure wiring: Supabase Auth user -> staff membership -> RLS-protected tables -> orders and customer dashboard -> calendar aggregation -> Stripe webhook-driven subscription state. Vercel hosts the multipage Vite site, with public Supabase URL/publishable key in browser configuration and Stripe secret/webhook keys in server-only configuration.
