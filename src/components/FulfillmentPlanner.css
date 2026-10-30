@@ -1,0 +1,43 @@
+/* Customer fulfillment planner: scoped styles to preserve the existing editorial system. */
+.mntl-planner{min-width:0;color:var(--mntl-ink,#29211d)}
+.mntl-planner-block{padding:28px 0 32px;border-top:1px solid var(--mntl-border,#d9c9bb)}
+.mntl-planner-label{font-size:11px;letter-spacing:.09em;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.mntl-planner-label svg{color:var(--mntl-rust,#ad7655)}
+.mntl-segment{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mntl-segment button{background:transparent;border:1px solid #baa695;color:#45372c;padding:16px 10px;font-weight:700;font-size:13px;min-height:52px}
+.mntl-segment button.is-selected{background:#e6d0bc;border-color:#b68b6e}
+.mntl-hint{font-size:12px;line-height:1.65;color:var(--mntl-muted,#73665c);margin:12px 0}
+.mntl-calendar{background:var(--mntl-paper,#fbf8f2);border:1px solid var(--mntl-border,#d9c9bb);max-width:540px;padding:18px 18px 20px}
+.mntl-calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.mntl-calendar-head strong{font-family:var(--mntl-serif,Georgia,serif);font-size:26px;font-weight:600}
+.mntl-calendar-head button{width:36px;height:36px;background:none;border:1px solid #d9c9bb;display:grid;place-items:center}
+.mntl-calendar-head button:disabled{opacity:.25;cursor:not-allowed}
+.mntl-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.mntl-weekdays{text-align:center;font-weight:700;font-size:10px;letter-spacing:.03em;color:#88786b;margin-bottom:10px}
+.mntl-day{aspect-ratio:1;border:1px solid transparent;background:transparent;display:grid;place-items:center;font-weight:700;font-size:13px;color:inherit;transition:background .15s,border-color .15s}
+.mntl-day:hover:not(:disabled){border-color:#bb8f75;background:#f1e4d8}
+.mntl-day.is-selected{background:var(--mntl-coffee,#241b17)!important;color:#fff;border-color:var(--mntl-coffee,#241b17)}
+.mntl-day.is-outside{opacity:.35}.mntl-day:disabled{opacity:.18;cursor:not-allowed}
+.mntl-day:focus-visible,.mntl-address-search button:focus-visible,.mntl-address-results button:focus-visible,.mntl-segment button:focus-visible{outline:3px solid var(--mntl-rust,#ad7655);outline-offset:2px}
+.mntl-confirm{display:flex;align-items:center;gap:10px;color:#4d5c3b;font-size:13px;margin-top:15px}
+.mntl-upcoming{margin-top:16px}.mntl-upcoming>span{font-size:10px;font-weight:800;letter-spacing:.08em}
+.mntl-upcoming>div{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.mntl-upcoming>div span{border:1px solid #d9c9bb;background:#f8f1e9;padding:8px 11px;font-size:11px}
+.mntl-address-search{display:flex;gap:8px;margin-top:16px}
+.mntl-address-search input,.mntl-field input{width:100%;min-width:0;min-height:52px;padding:13px;background:var(--mntl-paper,#fbf8f2);border:1px solid #cbb9a8;border-radius:0;color:var(--mntl-ink,#29211d)}
+.mntl-address-search button{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--mntl-coffee,#241b17);color:#fff;font-size:12px;font-weight:700;padding:0 16px;white-space:nowrap}
+.mntl-address-search button:disabled{opacity:.6}
+.mntl-address-results{border:1px solid var(--mntl-border,#d9c9bb);border-top:0;background:#fbf8f2;max-height:230px;overflow-y:auto}
+.mntl-address-results button{background:none;width:100%;display:flex;align-items:center;gap:10px;text-align:left;border-bottom:1px solid #eaded2;padding:12px;font-size:12px;line-height:1.5}
+.mntl-address-results button:hover{background:#ede2d6}.mntl-address-results button span{flex:1}
+.mntl-map{height:250px;margin:15px 0 8px;position:relative;background:#e8e0d6;border:1px solid #cbb9a8}
+.mntl-map iframe{border:0;width:100%;height:100%}.mntl-map-credit{position:absolute;right:5px;bottom:5px;background:#fffc;padding:3px 5px;font-size:9px;color:#3d3d3d}
+.mntl-map-open{display:inline-block;font-size:12px;font-weight:700;text-decoration:underline;margin:6px 0 13px}
+.mntl-field{display:block;margin-top:14px}.mntl-field>span{display:block;font-size:11px;font-weight:700;margin-bottom:8px}.mntl-field small{font-weight:400}
+.mntl-error{font-size:12px;line-height:1.5;color:#a02d29;margin-top:8px}
+.mntl-pickup-note{display:flex;gap:13px;align-items:flex-start;padding:17px;background:#eee3d9}
+.mntl-pickup-note svg{flex-shrink:0}.mntl-pickup-note p{font-size:13px;line-height:1.6;margin:0}
+.mntl-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){.mntl-calendar{padding:12px}.mntl-day{font-size:12px}.mntl-calendar-grid{gap:2px}.mntl-calendar-head strong{font-size:23px}.mntl-address-search{flex-direction:column}.mntl-address-search button{min-height:46px}.mntl-map{height:210px}}
+@media(prefers-reduced-motion:reduce){.mntl-day{transition:none}}
+
+.mntl-day.is-bookable:not(.is-selected):not(:disabled){position:relative;background:#f3e7d8;border-color:#dcc6b0}.mntl-day.is-bookable:not(.is-selected):not(:disabled)::after{content:'';position:absolute;bottom:3px;left:calc(50% - 2px);width:4px;height:4px;background:#976745;border-radius:50%}
