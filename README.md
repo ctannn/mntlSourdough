@@ -44,7 +44,15 @@ No private API credentials are required to run the informational storefront loca
 | `src/editorial.css` | Current **editorial bakery design system** and its central CSS tokens; loaded after the structural styles |
 | `public/images/original.webp` | Locally hosted AI-generated Original **hero** image |
 | `public/images/original-product.webp` | Locally hosted AI-generated cropped Original **product card** image |
-| `admin/main.jsx` | Operations dashboard: Auth, bakery counts/calendar, customer directory and batch publishing |
+| `admin/main.jsx` | Operations dashboard, staff auth, live/demo toggle and customer navigation |
+| `admin/demoData.js` | Deterministic fake customers, linked orders/subscriptions, safe local-only demo mutations |
+| `admin/productionMetrics.js` | Pure, tested recipe/order/calendar aggregation for both live and demo views |
+| `admin/RecordInspector.jsx` | Customer and order drill-down panels and cross-links |
+| `admin/recordInspector.css` | Detail drawer, demo controls and accessible responsive presentation |
+| `tests/*.test.mjs` | Validates synthetic PK/FK graph, uniqueness and production counts on every build |
+| `docs/ANALYTICS-DATA-MODEL.md` | Live relational schema/keys, KPI definitions and warehouse design |
+| `docs/DEMO-QA.md` | Exact click-by-click staff acceptance walkthrough |
+| `docs/sql/analytics_indexes.sql` | Versioned reporting indexes already applied to production |
 | `admin/operations.css` | Admin page responsive and print styling |
 | `docs/OPERATIONS-LAUNCH-RUNBOOK.md` | Detailed baker instructions, data definitions, RLS, launch blockers and review steps |
 | `docs/mntl-schema-draft.sql` | Historical initial database blueprint, **not** a full snapshot of applied changes |
