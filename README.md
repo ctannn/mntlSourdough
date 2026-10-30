@@ -38,15 +38,16 @@ No private API credentials are required to run the informational storefront loca
 | --- | --- |
 | `src/main.jsx` | Storefront composition: catalog, inquiry cart, story sections and shared page state |
 | `src/components/Hero.jsx` | Independent editorial hero, artwork/copy and primary conversion CTAs |
-| `src/components/BakeExperience.jsx` | **Shared** batch data polling, sticky oven ribbon, interactive visitor timer, expanded Oven experience |
+| `src/components/BakeExperience.jsx` | Baker-published oven ETA polling, one sticky freshness bar and compact public status panel |
 | `src/components/BakeExperience.css` | Sticky ribbon and Oven styles, including mobile |
 | `src/style.css` | Existing storefront structural styles |
-| `src/editorial.css` | Current **editorial bakery design system** and its central CSS tokens; loaded after the structural styles |
-| `public/images/original.webp` | Locally hosted AI-generated Original **hero** image |
-| `public/images/original-product.webp` | Locally hosted AI-generated cropped Original **product card** image |
-| `admin/main.jsx` | Operations dashboard, staff auth, live/demo toggle and customer navigation |
+| `src/editorial.css` | Current **v3 product-first MNTL design tokens** and responsive CSS; loaded after structural styles |
+| `public/images/original.webp` | Archived compact concept image (too low-res for current hero; not in use) |
+| `public/images/original-product.webp` | Archived small concept crop; current photos are high-resolution stand-ins |
+| `admin/main.jsx` | Operations, authenticated demo toggle, customer drill-down and baker-controlled oven ETA |
 | `admin/demoData.js` | Deterministic fake customers, linked orders/subscriptions, safe local-only demo mutations |
-| `admin/productionMetrics.js` | Pure, tested recipe/order/calendar aggregation for both live and demo views |
+| `admin/productionMetrics.js` | Pure, tested recipe/order/calendar aggregation for live and demo views |
+| `admin/bakeTime.js`, `src/components/batchStatus.js` | Calgary ABT oven timestamps, public selection/formatting (both unit-tested) |
 | `admin/RecordInspector.jsx` | Customer and order drill-down panels and cross-links |
 | `admin/recordInspector.css` | Detail drawer, demo controls and accessible responsive presentation |
 | `tests/*.test.mjs` | Validates synthetic PK/FK graph, uniqueness and production counts on every build |
@@ -58,26 +59,27 @@ No private API credentials are required to run the informational storefront loca
 | `docs/mntl-schema-draft.sql` | Historical initial database blueprint, **not** a full snapshot of applied changes |
 | `index.html`, `admin.html`, `vite.config.js`, `vercel.json` | Application entrypoints, build and routing |
 
-## Visual design
+## Design direction and photography
 
-**Direction:** upscale independent bakery, not supermarket. The CSS tokens in `src/editorial.css` use parchment, espresso, wheat and muted terracotta; serif editorial headlines provide contrast to DM Sans UI controls.
+**Visual v3:** MNTL is a bold, product-led Calgary bakery with a little running-club attitude—not a generic serif/terracotta lifestyle advertisement and not a neon supermarket promotion. \`src/editorial.css\` defines a clean ink/off-white palette, restrained wheat accent, compact shop/navigation components and a full-height **split hero**: bold sans-serif copy on the left, a sharp full-size bread photograph on the right. The hero itself lives in \`src/components/Hero.jsx\`.
 
-The home hero deliberately pairs copy on the left with a visible sourdough loaf to the right, so there is no blank right-hand field. Its image is a generated **brand concept photograph**, not a photo of a verified physical MNTL product. Replace it with professionally photographed actual inventory before public paid launch. A complementary crop of the same generated loaf is used for The Original product card. Later, replace any remaining third-party Unsplash image URLs for the Seeded, Weekend and crumb sections with owned imagery.
+The original local \`public/images/original*.webp\` thumbnails were too small and visibly blurry when stretched. They are **legacy assets only**; the current storefront uses high-resolution Unsplash photography with \`w=1400–2400&q=90\` for hero, product and crumb imagery, preconnecting and preloading the hero URL. This is a **temporary licensed image stand-in**, not verified photography of an actual MNTL loaf. The bakery should replace it with first-party high-resolution product photos before accepting paid orders. Do not imply stock images are photos of the actual product. See [the design handoff](docs/BRAND-DESIGN.md).
 
-The new image is checked into `public/images/`, rather than fetched from a third-party service, so it can load reliably. The high-resolution generated PNG is available as a conversation working asset, but is not committed as the served website asset; two compact WebP derivatives are versioned in GitHub. For sharper desktop display, a future image optimization pass should replace the current compact WebP with responsive `srcset` assets.
+## Real bakery oven countdown
 
-For the full design evolution, see [docs/BRAND-DESIGN.md](docs/BRAND-DESIGN.md).
+The slim \`StickyBakeBar\` remains at the **top of the page while scrolling**. It is a **real bakery freshness clock**, not a customer timer.
 
-## Sticky batch ribbon / timer
+- Bakers sign in at \`/admin\`, choose **Oven countdown**, select a bake date and stage, set **Next loaves out of the oven (Calgary time)**, and explicitly publish.
+- The public client requests \`bake_updates\` with \`published=true\` (RLS) every **60 seconds**. It selects the **next future estimated oven-ready timestamp** from published upcoming records and counts down every second.
+- A future estimate within 24 hours reads **"Next loaf coming out of the oven in MM:SS / HH:MM:SS"**. Further-out dates show their scheduled Calgary bake time. A current published \`ready\` stage can display a freshly-ready status.
+- Without a valid published future estimate, the bar displays a neutral bakery message. **No fake countdown, no play/pause/reset, and no automatically invented loaf availability.** Once an estimate has passed, the countdown disappears rather than claiming fresh bread is ready.
+- The expanded Oven information below the catalog is deliberately compact—not a giant mock oven counter.
+- The current \`bake_updates\` table is **one update per bake date** (primary key \`bake_date\`). If the business wants multiple batches on the same calendar date, add a separate normalized \`bakery_batches\` table with UUID PK and per-batch timestamps before relying on this as a multi-batch schedule.
+- All public fields are manually maintained and **estimated**, not a sensor or pickup-time guarantee. Demo Mode edits never publish to the storefront.
 
-`BakeExperienceProvider` is mounted once around the storefront. Both `StickyBakeBar` (top, follows scroll) and `BakePulse` (the full Oven section) read the **same** context, so the fun 35-minute timer does not restart when the visitor scrolls.
+**Critical timezone rule:** Alberta adopts permanent Alberta Time (ABT), **UTC−6 beginning November 1, 2026**. Both \`admin/bakeTime.js\` and \`src/components/batchStatus.js\` explicitly support this transition instead of depending on outdated browser IANA timezone data. Production order cutoffs use the same bakery local-time interpretation.
 
-1. Every 90 seconds the client requests **published-only** `bake_updates` for today's **Calgary date**. Public RLS ensures private batch records remain inaccessible.
-2. If a public batch exists, the sticky ribbon displays its stage and optional estimated remaining time. All timings are estimates manually published by a baker, never automated sensor readings.
-3. Without an active published batch, the ribbon shows a **clearly labelled, just-for-fun visitor timer** with Start/Pause and an Oven shortcut. The expanded Oven section also has Reset.
-4. The visitor timer is in-memory only; it resets on full page reload. The top bar uses CSS `position: sticky; top: 0` and has compact responsive controls.
-
-The admin's **Live bake timer** tab updates the record in Supabase. No order confirmation, payment status or exact pickup time is exposed by this public tracker.
+Unit coverage includes \`tests/batch-status.test.mjs\` and \`tests/bake-time.test.mjs\`; builds run all Node tests before Vite compilation. More detail: [Oven Countdown engineering notes](docs/OVEN-COUNTDOWN.md).
 
 ## Data and security
 
