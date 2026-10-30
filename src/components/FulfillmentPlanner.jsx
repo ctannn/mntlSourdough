@@ -80,7 +80,7 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
           {searchText.trim()&&<a className="mntl-map-open" href={mapSearch(searchText)} target="_blank" rel="noopener noreferrer">Find this street address on Google Maps ↗</a>}
           <p className="mntl-hint">Tap the map to choose your entrance pin. For automatic address suggestions, the bakery can enable Google Places. Map pins are not delivery eligibility checks.</p>
         </>}
-        <label className="mntl-field"><span>Delivery address (edit if needed)</span><input value={preference.address || ''} onChange={e=>{set({address:e.target.value,location:null});setSearchText(e.target.value);setMapAddress('');}} placeholder="Street, city, postal code" autoComplete="street-address"/></label>
+        <label className="mntl-field"><span>Delivery address (edit if needed)</span><input value={preference.address || ''} onChange={e=>{set({address:e.target.value,location:null});setSearchText(e.target.value);setSearchError('');}} placeholder="Street, city, postal code" autoComplete="street-address"/></label>
         <label className="mntl-field"><span>Apartment, unit or delivery instructions <small>(optional)</small></span><input value={preference.instructions||''} onChange={e=>set({instructions:e.target.value})} placeholder="Unit number, buzzer, entrance..." /></label>
         <p className="mntl-hint">Delivery area and fees are not yet confirmed. Map previews do not verify deliverability.</p>
       </> : <div className="mntl-pickup-note"><MapPin size={19}/><p><strong>Pickup in Calgary</strong><br/>{pickupAddress?pickupAddress:'Exact pickup address, hours and directions will be provided before your order is confirmed.'}</p></div>}
