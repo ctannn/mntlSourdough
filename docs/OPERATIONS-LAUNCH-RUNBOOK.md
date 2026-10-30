@@ -1,3 +1,5 @@
+> **Staff training mode:** After owner/staff login, choose **Try demo mode** in the sidebar. It displays 16 fictional customers and linked orders, addresses, marketing preferences and subscriptions; clickable names open customer profiles and order histories. Sample edits remain inside browser state only and never touch Supabase or the public website. Use [the click-by-click demo checklist](DEMO-QA.md) and [the audited relational data model](ANALYTICS-DATA-MODEL.md). The production bake counts use the same tested calculation module as the demo.
+
 > **Correction:** Bake cutoff times are now calculated as 6 PM Calgary/Mountain time, including DST, regardless of the staff member's device timezone. Older language below referring to device-local is superseded.
 
 # MNTL Bakery Operations — Staff Guide and Launch Runbook
