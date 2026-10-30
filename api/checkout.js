@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import {allowMethod,paymentReady,database,reply} from '../server/mntlDb.mjs';
 const PRODUCT_NAMES={classic:'The Original',seed:'The Seeded',olive:'The Weekend Loaf'};
 const safeEmail=value=>typeof value==='string'&&value.length<=320&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-const validDate=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&new Date(value+'T12:00:00Z').toISOString().slice(0,10)===value;
+const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T12:00:00Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
 const clean=value=>typeof value==='string'?value.trim():'';
 const abortHold=async id=>{
   await database('/rest/v1/checkout_holds?id=eq.'+encodeURIComponent(id),{
