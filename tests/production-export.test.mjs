@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildDemoData} from '../admin/demoData.js';
+import {readFileSync} from 'node:fs';
 import {calculateProductionDay, joinOrders} from '../admin/productionMetrics.js';
 import {productionCsv, productionRows, filenameForProduction, PRODUCTION_COLUMNS} from '../admin/productionExport.js';
 
@@ -58,4 +59,13 @@ test('invalid quantities or duplicate date-product combinations are rejected', (
   assert.throws(()=>productionRows([day,day],data.products),/Duplicate/);
   assert.throws(()=>productionRows([{...day,paidUnits:{[data.products[0].id]:-2}}],data.products),/nonnegative/);
   assert.throws(()=>filenameForProduction([]),/No dates/);
+});
+
+// The admin module has a 'URL' string constant for Supabase; it must not
+// shadow the browser URL constructor when downloading export files.
+test('CSV download uses the browser URL API, not the Supabase URL string',()=>{
+  const adminSource = readFileSync(new URL('../admin/main.jsx',import.meta.url),'utf8');
+  assert.match(adminSource,/window\.URL\.createObjectURL\(blob\)/);
+  assert.match(adminSource,/window\.URL\.revokeObjectURL\(url\)/);
+  assert.doesNotMatch(adminSource,/(?<!\.)\bURL\.createObjectURL\(/);
 });
