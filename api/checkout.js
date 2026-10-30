@@ -6,7 +6,7 @@ const validDate=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value
 const clean=value=>typeof value==='string'?value.trim():'';
 const abortHold=async id=>{
   await database('/rest/v1/checkout_holds?id=eq.'+encodeURIComponent(id),{
-    method:'PATCH',body:{status:'cancelled'},headers:{Prefer:'return=minimal'}
+    method:'PATCH',body:{status:'expired'},headers:{Prefer:'return=minimal'}
   }).catch(()=>{});
 };
 export default async function handler(req,res) {
@@ -23,7 +23,7 @@ export default async function handler(req,res) {
     return reply(res,422,{error:'Please check your loaf quantities.'});
   if(lines.reduce((total,x)=>total+x.qty,0)>50)
     return reply(res,422,{error:'Maximum 50 loaves per order.'});
-  let holdId;
+  let holdId, createdSession;
   try{
     const days=await database('/rest/v1/bake_days?select=id,bake_date&bake_date=eq.'+encodeURIComponent(date)+'&status=eq.open&limit=1');
     if(days?.length!==1)return reply(res,409,{error:'That bake date is no longer open. Please choose another.'});
@@ -63,6 +63,7 @@ export default async function handler(req,res) {
       expires_at:Math.floor(Date.now()/1000)+30*60
     },{idempotencyKey:'mntl_checkout_'+holdId});
     if(!session?.url||!session.id)throw new Error('Payment provider could not create checkout');
+    createdSession=session.id;
     await database('/rest/v1/checkout_holds?id=eq.'+encodeURIComponent(holdId),{
       method:'PATCH',body:{stripe_checkout_session_id:session.id},headers:{Prefer:'return=minimal'}
     });
@@ -70,6 +71,7 @@ export default async function handler(req,res) {
   }catch(error){
     // If a payment session was created but assignment failed, the hold is
     // canceled; Stripe session expiry/reconciliation must still be monitored.
+    if(createdSession){try{const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);await stripe.checkout.sessions.expire(createdSession);}catch{console.error('Manual reconciliation may be needed for checkout session',createdSession);}}
     if(holdId)await abortHold(holdId);
     console.error('MNTL checkout could not start:',error?.status||error?.type||'internal');
     if(error?.details?.includes('Not enough loaves')||error?.details?.includes('Bake day unavailable'))
