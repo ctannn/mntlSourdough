@@ -14,10 +14,14 @@ const STAGES = ['mixing', 'fermenting', 'shaping', 'proofing', 'baking', 'coolin
 const BakeContext = createContext(null);
 
 function todayInCalgary() {
-  return new Intl.DateTimeFormat('en-CA', {
+  // Construct an ISO date explicitly; locale-formatted date strings are not
+  // guaranteed to use YYYY-MM-DD in every browser.
+  const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Edmonton',
     year: 'numeric', month: '2-digit', day: '2-digit'
-  }).format(new Date());
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return values.year + '-' + values.month + '-' + values.day;
 }
 
 function formatClock(totalSeconds) {
