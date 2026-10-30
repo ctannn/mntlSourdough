@@ -1,3 +1,5 @@
+> **Correction:** Bake cutoff times are now calculated as 6 PM Calgary/Mountain time, including DST, regardless of the staff member's device timezone. Older language below referring to device-local is superseded.
+
 # MNTL Bakery Operations — Staff Guide and Launch Runbook
 
 Last updated: 2026-10-29. Project: [runmntl.com](https://runmntl.com) / [admin.html](https://runmntl.com/admin.html).
