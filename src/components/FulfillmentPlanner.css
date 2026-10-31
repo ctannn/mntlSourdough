@@ -53,3 +53,7 @@
 .mntl-custom-rhythm input{width:83px}.mntl-custom-rhythm select{min-width:120px}
 .mntl-rhythm-options button:focus-visible,.mntl-custom-rhythm input:focus-visible,.mntl-custom-rhythm select:focus-visible{outline:3px solid #ab8547;outline-offset:2px}
 @media(max-width:480px){.mntl-rhythm-options{grid-template-columns:1fr 1fr}.mntl-rhythm-options button{font-size:11px}.mntl-custom-rhythm{gap:8px;padding:12px}.mntl-custom-rhythm input{width:72px}}
+
+/* Bakers need one calendar day of notice; no same-day date selections. */
+.mntl-bake-notice{padding:14px 17px;margin:15px 0 12px;background:#e8ecdf;border-left:3px solid #8b6e45;color:#314336;font-size:12px;line-height:1.7}
+.mntl-bake-notice strong{color:#1b3023;font-weight:900}
