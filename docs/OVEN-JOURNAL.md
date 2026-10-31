@@ -30,8 +30,8 @@ When no article has been published, visitors see a designed "Something good is i
 
 Supabase project \`dfyzpflempgtokyhvtlo\`. The two SQL migrations are tracked in:
 
-- [create_oven_journal.sql](../supabase/migrations/20261031_create_oven_journal.sql)
-- [blog_author_analytics_index.sql](../supabase/migrations/20261031_blog_author_analytics_index.sql)
+- [create_oven_journal.sql](../supabase/migrations/20261031031520_create_oven_journal.sql)
+- [blog_author_analytics_index.sql](../supabase/migrations/20261031032111_blog_author_analytics_index.sql)
 
 The \`public.blog_posts\` table includes:
 
