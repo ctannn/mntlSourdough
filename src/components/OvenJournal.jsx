@@ -79,6 +79,8 @@ function JournalHome({posts}) {
 function JournalArticle({post}) {
   useEffect(()=>{
     document.title=post.title+' — The Oven | MNTL Sourdough';
+    const canonical=document.querySelector('link[rel="canonical"]');
+    if(canonical)canonical.href='https://runmntl.com/oven/'+post.slug;
     const meta=document.querySelector('meta[name="description"]');
     if(meta)meta.setAttribute('content',post.excerpt||'MNTL journal — stories from the oven in Calgary.');
   },[post.slug]);
@@ -102,6 +104,10 @@ export function OvenJournal() {
   const [retry,setRetry]=useState(0);
   useEffect(()=>{
     document.title='The Oven — Stories from MNTL Sourdough';
+    const canonical=document.querySelector('link[rel="canonical"]');
+    if(canonical)canonical.href='https://runmntl.com'+window.location.pathname;
+    const description=document.querySelector('meta[name="description"]');
+    if(description)description.setAttribute('content','The Oven: stories, recipes and behind-the-bake notes from MNTL Sourdough in Calgary.');
     if(invalidPath)return;
     let active=true;setState({loading:true,posts:[],error:''});
     fetchPublished(slug).then(posts=>{if(active)setState({loading:false,posts,error:''})})
