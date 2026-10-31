@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import {ArrowUpRight,LockKeyhole,Mail,ShieldCheck} from 'lucide-react';
 import './CheckoutContact.css';
+import {validCadence} from '../lib/scheduling.mjs';
 const validEmail=value=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 export function CheckoutContact({cart,mode,fulfillment,preference,availability,checkoutStatus,onInquiry}) {
   const [details,setDetails]=useState({firstName:'',lastName:'',email:'',phone:''});
@@ -12,11 +13,12 @@ export function CheckoutContact({cart,mode,fulfillment,preference,availability,c
     bakeDate?.bookable && cart.length>0 && cart.every(item=>item.frequency==='one-time'));
   const hasDate=Boolean(preference.date);
   const hasAddress=fulfillment!=='delivery'||(preference.address||'').trim().length>=6;
-  const canSend=cart.length>0&&hasDate&&hasAddress;
+  const validRhythm=mode!=='subscription'||validCadence(preference.frequency,{interval:Number(preference.customInterval||0),unit:preference.customUnit||'days'});
+  const canSend=cart.length>0&&hasDate&&hasAddress&&validRhythm;
   async function submit(event) {
     event.preventDefault();
     setMessage('');
-    if(!canSend){setMessage('Choose your first bake date and add a loaf'+(fulfillment==='delivery'?' and delivery address':'')+'.');return;}
+    if(!canSend){setMessage(!validRhythm?'Choose a valid custom Bread Club interval.':'Choose your first bake date and add a loaf'+(fulfillment==='delivery'?' and delivery address':'')+'.');return;}
     if(!details.firstName.trim()||!details.lastName.trim()||!validEmail(details.email.trim())) {
       setMessage('Enter your name and valid email address.');return;
     }
@@ -50,6 +52,7 @@ export function CheckoutContact({cart,mode,fulfillment,preference,availability,c
     </div>
     {message&&<div className="mntl-contact-message" role="alert">{message}</div>}
     {!hasDate&&<p className="mntl-contact-helper">Select a preferred bake date in the planner first.</p>}
+    {!validRhythm&&<p className="mntl-contact-helper">Choose a valid Bread Club rhythm before sending your inquiry.</p>}
     {fulfillment==='delivery'&&!hasAddress&&<p className="mntl-contact-helper">Enter your delivery address in the planner first.</p>}
     <button className="btn dark full" type="submit" disabled={!canSend||busy}>
       {busy?'OPENING SECURE CHECKOUT…':canPay?'CONTINUE TO SECURE CHECKOUT':'EMAIL ORDER INQUIRY'} <ArrowUpRight size={17}/>
