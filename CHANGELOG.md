@@ -2,6 +2,16 @@
 
 Changes that affect the customer storefront, baker operations or project architecture are recorded here.
 
+## 2026-10-31 — The Oven editorial journal + coordinated storefront fixes (release candidate)
+
+- Replaced broken external hero URL with **locally hosted sharp WebP sourdough imagery** and safe image fallback. Updated hero preload and social image. Concept photography must be replaced by actual product photographs before paid sales.
+- **The Oven is now a blog:** public \`/oven\` landing and \`/oven/:slug\` reader pages, with responsive typography and proper empty state. The baker's real top-bar countdown continues separately under **FRESHNESS**.
+- Added authenticated **The Oven — Posts** admin area to create, preview, edit, publish/unpublish and manage posts. Optional cover photo uploads to a size/type-restricted Supabase Storage bucket. Fully isolated fictional demo posts.
+- Migrated \`public.blog_posts\` with UUID PK, unique slugs, author FKs, database-maintained timestamps, status checks, five row-level security policies, published-only public reads and restricted staff edit rights. Rollback-only RLS checks confirmed drafts are invisible anonymously.
+- Expanded **Bread Club** to weekly, every 2 or 3 weeks, calendar-monthly, and custom 1–90 days / 1–12 weeks with validated inquiry text and recurrence preview. No recurring payment activation.
+- Added automated regression tests for public blog visibility, URL and HTML safety, image presence, routing and recurrence edge cases.
+- All changes are on a reviewed feature branch/PR until one approved release. Nothing in this section is claimed live before the production Vercel SHA is verified.
+
 ## 2026-10-30 — Bakery freshness clock and MNTL visual identity V3
 
 - **Corrected the timer's meaning:** Removed the visitor-controlled 35-minute play/pause/reset timer. The compact sticky top bar now counts down only to a published estimated oven-ready time actually set by a baker in the admin.
