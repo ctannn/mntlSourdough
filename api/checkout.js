@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import {allowMethod,paymentReady,database,reply} from '../server/mntlDb.mjs';
+import {isCustomerBakeDateAllowed} from '../src/lib/scheduling.mjs';
 const PRODUCT_NAMES={classic:'The Original',seed:'The Seeded',olive:'The Weekend Loaf'};
 const safeEmail=value=>typeof value==='string'&&value.length<=320&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T12:00:00Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
@@ -19,14 +20,16 @@ export default async function handler(req,res) {
     return reply(res,422,{error:'Online checkout currently supports one-time pickup only.'});
   if(firstName.length<1||firstName.length>120||lastName.length<1||lastName.length>120||!safeEmail(email)||!validDate(date))
     return reply(res,422,{error:'Enter your name, email and a valid bake date.'});
+  if(!isCustomerBakeDateAllowed(date,new Date()))
+    return reply(res,422,{error:'Same-day orders are unavailable. Tomorrow closes at 6 PM Calgary time. Choose a later bake date.'});
   if(!lines||!lines.length||lines.length>12||lines.some(x=>!PRODUCT_NAMES[x.id]||!Number.isInteger(x.qty)||x.qty<1||x.qty>20))
     return reply(res,422,{error:'Please check your loaf quantities.'});
   if(lines.reduce((total,x)=>total+x.qty,0)>50)
     return reply(res,422,{error:'Maximum 50 loaves per order.'});
   let holdId, createdSession;
   try{
-    const days=await database('/rest/v1/bake_days?select=id,bake_date&bake_date=eq.'+encodeURIComponent(date)+'&status=eq.open&limit=1');
-    if(days?.length!==1)return reply(res,409,{error:'That bake date is no longer open. Please choose another.'});
+    const days=await database('/rest/v1/bake_days?select=id,bake_date,cutoff_at&bake_date=eq.'+encodeURIComponent(date)+'&status=eq.open&limit=1');
+    if(days?.length!==1||!days[0]?.cutoff_at||Date.parse(days[0].cutoff_at)<=Date.now())return reply(res,409,{error:'That bake date is closed or past its cutoff. Please choose another.'});
     const products=await database('/rest/v1/products?select=id,name,price_cents&active=eq.true&limit=100');
     const byName=new Map((products||[]).map(p=>[p.name,p]));
     const cart=lines.map(x=>({product_id:byName.get(PRODUCT_NAMES[x.id])?.id,quantity:x.qty}));
