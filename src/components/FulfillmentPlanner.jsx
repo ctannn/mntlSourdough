@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import {GoogleAddressPicker} from './GoogleAddressPicker.jsx';
 import {OpenStreetAddressPicker} from './OpenStreetAddressPicker.jsx';
 import {CalendarDays, ChevronLeft, ChevronRight, MapPin, Search, Check, Truck} from 'lucide-react';
-import {addDateDays, addDateMonths, calgaryToday, monthCells, occurrences, readableDate} from '../lib/scheduling.mjs';
+import {addDateDays, addDateMonths, calgaryToday, monthCells, occurrences, readableDate, cadenceLabel, validCadence} from '../lib/scheduling.mjs';
 import './FulfillmentPlanner.css';
 
 // Customer requests are preferences only. Availability, capacity and delivery zones
@@ -22,7 +22,8 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
   const liveDates=Boolean(availability?.configured && (availability.dates||[]).some(x=>x.bookable));
   const set = patch => onPreferenceChange(previous => ({...previous,...patch}));
   const frequency = mode === 'one-time' ? 'once' : preference.frequency;
-  const scheduled = useMemo(() => occurrences(preference.date, frequency, 4),[preference.date, frequency]);
+  const cadence={interval:Number(preference.customInterval||0),unit:preference.customUnit||'days'};
+  const scheduled = useMemo(() => mode==='subscription'?occurrences(preference.date, frequency, 4, cadence):[],[preference.date, frequency,preference.customInterval,preference.customUnit,mode]);
   const dayCells = useMemo(() => monthCells(month),[month]);
   const monthLabel = new Intl.DateTimeFormat('en-CA',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T12:00:00Z'));
   function findAddress(event) {
@@ -44,11 +45,31 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
   return <div className="mntl-planner">
     {mode === 'subscription' && <div className="mntl-planner-block">
       <div className="mntl-planner-label"><span>04 — YOUR BREAD RHYTHM</span><CalendarDays size={17}/></div>
-      <div className="mntl-segment" role="group" aria-label="Subscription frequency">
-        <button type="button" aria-pressed={preference.frequency==='weekly'} className={preference.frequency==='weekly'?'is-selected':''} onClick={()=>set({frequency:'weekly'})}>Every week</button>
-        <button type="button" aria-pressed={preference.frequency==='biweekly'} className={preference.frequency==='biweekly'?'is-selected':''} onClick={()=>set({frequency:'biweekly'})}>Every 2 weeks</button>
+      <div className="mntl-segment mntl-rhythm-options" role="group" aria-label="Subscription frequency">
+        {[
+          ['weekly','Every week'],['biweekly','Every 2 weeks'],
+          ['triweekly','Every 3 weeks'],['monthly','Monthly'],
+          ['custom','Custom cadence']
+        ].map(([value,label])=><button key={value} type="button"
+          aria-pressed={preference.frequency===value}
+          className={preference.frequency===value?'is-selected':''}
+          onClick={()=>set({frequency:value})}>{label}</button>)}
       </div>
-      <p className="mntl-hint">Choose when your first bake should be. Future dates follow the same weekday.</p>
+      {preference.frequency==='custom'&&<div className="mntl-custom-rhythm">
+        <label htmlFor="mntl-custom-interval">Repeat every</label>
+        <input id="mntl-custom-interval" type="number" min="1"
+          max={preference.customUnit==='weeks'?12:90} step="1"
+          value={preference.customInterval??10}
+          onChange={e=>set({customInterval:e.target.value===''?'':Number(e.target.value)})}/>
+        <label className="mntl-sr" htmlFor="mntl-custom-unit">Custom interval unit</label>
+        <select id="mntl-custom-unit" value={preference.customUnit||'days'}
+          onChange={e=>set({customUnit:e.target.value,customInterval:Math.min(Number(preference.customInterval)||1,e.target.value==='weeks'?12:90)})}>
+          <option value="days">Days</option><option value="weeks">Weeks</option>
+        </select>
+      </div>}
+      {preference.frequency==='custom'&&!validCadence(preference.frequency,cadence)
+        &&<p className="mntl-error" role="alert">Choose 1–90 days or 1–12 weeks for your custom interval.</p>}
+      <p className="mntl-hint">Your requested rhythm: <strong>{cadenceLabel(preference.frequency,cadence)}</strong>. Choose the first bake below to preview your next four requests. All dates remain subject to the bakery's actual schedule and confirmation.</p>
     </div>}
     <div className="mntl-planner-block">
       <div className="mntl-planner-label"><span>{mode === 'subscription' ? '05' : '04'} — PREFERRED FIRST BAKE DATE</span><CalendarDays size={17}/></div>
