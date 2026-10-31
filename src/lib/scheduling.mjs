@@ -34,10 +34,43 @@ export function monthCells(month) {
   const offset = new Date(first + 'T12:00:00Z').getUTCDay();
   return Array.from({length: 42}, (_, i) => addDateDays(first, i - offset));
 }
-export function occurrences(first, frequency, count = 4) {
-  if (!isISODate(first) || !['weekly', 'biweekly'].includes(frequency) || !Number.isInteger(count) || count < 0 || count > 52) return [];
-  const interval = frequency === 'weekly' ? 7 : 14;
-  return Array.from({length: count}, (_, i) => addDateDays(first, i * interval));
+export function validCadence(frequency, custom = {}) {
+  if (['weekly','biweekly','triweekly','monthly'].includes(frequency)) return true;
+  if (frequency !== 'custom') return false;
+  const {unit,interval} = custom;
+  return Number.isInteger(interval) && interval >= 1
+    && ((unit === 'days' && interval <= 90) || (unit === 'weeks' && interval <= 12));
+}
+export function cadenceLabel(frequency, custom = {}) {
+  if (frequency === 'weekly') return 'Every week';
+  if (frequency === 'biweekly') return 'Every 2 weeks';
+  if (frequency === 'triweekly') return 'Every 3 weeks';
+  if (frequency === 'monthly') return 'Every month';
+  if (frequency === 'custom' && validCadence(frequency,custom)) {
+    return 'Every ' + custom.interval + ' ' + (custom.unit === 'weeks' ? (custom.interval === 1?'week':'weeks') : (custom.interval === 1?'day':'days'));
+  }
+  return 'Schedule not selected';
+}
+function addRecurringMonths(first, numberOfMonths) {
+  const start = new Date(first + 'T12:00:00Z');
+  const anchorDay = start.getUTCDate();
+  const monthStart = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth()+numberOfMonths,1,12));
+  const nextMonthStart = new Date(Date.UTC(monthStart.getUTCFullYear(),monthStart.getUTCMonth()+1,1,12));
+  const lastDay = Math.round((nextMonthStart-monthStart)/86400000);
+  monthStart.setUTCDate(Math.min(anchorDay,lastDay));
+  return monthStart.toISOString().slice(0,10);
+}
+export function occurrences(first, frequency, count = 4, custom = {}) {
+  if (!isISODate(first) || !validCadence(frequency, custom) ||
+      !Number.isInteger(count) || count < 0 || count > 52) return [];
+  if (frequency === 'monthly') {
+    return Array.from({length:count}, (_,i) => addRecurringMonths(first,i));
+  }
+  const days = frequency === 'weekly' ? 7
+    : frequency === 'biweekly' ? 14
+    : frequency === 'triweekly' ? 21
+    : custom.interval * (custom.unit === 'weeks' ? 7 : 1);
+  return Array.from({length: count}, (_,i) => addDateDays(first,i*days));
 }
 export function readableDate(value, opts = {weekday:'short', month:'short', day:'numeric'}) {
   if (!isISODate(value)) return '';
