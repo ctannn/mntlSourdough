@@ -82,10 +82,11 @@ export function BlogManager({session,role,demoEnabled,demoPosts,setDemoPosts}) {
       if(demoEnabled){
         setDemoPosts(old=>old.filter(p=>p.id!==draft.id));
       } else {
-        await parseResponse(await fetch(OVEN_PUBLIC_REST+'?id=eq.'+encodeURIComponent(draft.id),{
+        const removed=await parseResponse(await fetch(OVEN_PUBLIC_REST+'?id=eq.'+encodeURIComponent(draft.id),{
           method:'DELETE',headers:{apikey:OVEN_PUBLIC_KEY,Authorization:'Bearer '+session.access_token,
             Prefer:'return=representation'}
         }));
+        if(!Array.isArray(removed)||removed.length!==1)throw Error('Draft was not deleted. You may lack owner permission.');
         await refresh();
       }
       createNew();setMessage('Unpublished draft deleted.');
