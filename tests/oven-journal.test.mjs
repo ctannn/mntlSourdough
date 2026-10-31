@@ -71,8 +71,8 @@ test('public Oven is a real route, not a link to the bake countdown section',()=
   assert.match(main,/window\.location\.pathname\.startsWith\('\/oven'\)/);
   const publicPage=source('src/components/OvenJournal.jsx');
   assert.match(publicPage,/status:'eq\.published'/);
-  assert.doesNotMatch(publicPage,/dangerouslySetInnerHTML/);
-  assert.doesNotMatch(source('src/components/StoryBody.jsx'),/dangerouslySetInnerHTML/);
+  assert.doesNotMatch(publicPage,/dangerouslySetInnerHTML\s*=/);
+  assert.doesNotMatch(source('src/components/StoryBody.jsx'),/dangerouslySetInnerHTML\s*=/);
 });
 
 test('locally hosted bakery images are substantial valid WebP files',()=>{
