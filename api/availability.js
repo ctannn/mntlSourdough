@@ -1,12 +1,14 @@
 import {allowMethod,databaseConfigured,database,reply,calgaryDate,plusDays} from '../server/mntlDb.mjs';
+import {earliestCustomerBakeDate} from '../src/lib/scheduling.mjs';
 const MAX_DATES=90;
 const idsParam=ids=>'in.('+ids.map(id=>encodeURIComponent(id)).join(',')+')';
 export default async function handler(req,res) {
   if(!allowMethod(req,res,'GET'))return;
   if(!databaseConfigured())return reply(res,200,{configured:false,dates:[],message:'Bake dates have not been published for online checkout.'});
   try{
-    const today=calgaryDate();
-    const after=plusDays(today,1);
+    const now=new Date();
+    const today=calgaryDate(now);
+    const after=earliestCustomerBakeDate(now);
     const before=plusDays(today,MAX_DATES);
     const days=await database('/rest/v1/bake_days?select=id,bake_date,cutoff_at,capacity_loaves,status&bake_date=gte.'+after+'&bake_date=lte.'+before+'&status=eq.open&order=bake_date.asc&limit=100');
     const eligible=(days||[]).filter(x=>x.cutoff_at&&Date.parse(x.cutoff_at)>Date.now()&&Number.isInteger(x.capacity_loaves)&&x.capacity_loaves>0);

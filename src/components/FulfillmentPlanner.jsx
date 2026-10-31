@@ -1,8 +1,8 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {GoogleAddressPicker} from './GoogleAddressPicker.jsx';
 import {OpenStreetAddressPicker} from './OpenStreetAddressPicker.jsx';
 import {CalendarDays, ChevronLeft, ChevronRight, MapPin, Search, Check, Truck} from 'lucide-react';
-import {addDateDays, addDateMonths, calgaryToday, monthCells, occurrences, readableDate, cadenceLabel, validCadence} from '../lib/scheduling.mjs';
+import {addDateDays, addDateMonths, calgaryToday, earliestCustomerBakeDate, isCustomerBakeDateAllowed, monthCells, occurrences, readableDate, cadenceLabel, validCadence} from '../lib/scheduling.mjs';
 import './FulfillmentPlanner.css';
 
 // Customer requests are preferences only. Availability, capacity and delivery zones
@@ -12,9 +12,16 @@ function mapSearch(address) {
   return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(address+', Calgary, Alberta, Canada');
 }
 export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceChange, availability, pickupAddress}) {
-  const today = calgaryToday();
-  const firstSelectable = addDateDays(today, 2);
+  const [nowMs,setNowMs] = useState(()=>Date.now());
+  useEffect(()=>{
+    const ticker=window.setInterval(()=>setNowMs(Date.now()),30_000);
+    return ()=>window.clearInterval(ticker);
+  },[]);
+  const now = new Date(nowMs);
+  const today = calgaryToday(now);
+  const firstSelectable = earliestCustomerBakeDate(now);
   const lastSelectable = addDateDays(today, 90);
+  const hasExpiredSelection = Boolean(preference.date && !isCustomerBakeDateAllowed(preference.date,now));
   const [month, setMonth] = useState(preference.date ? preference.date.slice(0,7) : firstSelectable.slice(0,7));
   const [searchText, setSearchText] = useState(preference.address || '');
   const [searchError, setSearchError] = useState('');
@@ -82,9 +89,11 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
         <div className="mntl-calendar-grid mntl-weekdays">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=><span key={d}>{d}</span>)}</div>
         <div className="mntl-calendar-grid">{dayCells.map(calendarDay)}</div>
       </div>
+      <p className="mntl-bake-notice"><strong>Fresh bread needs a little notice.</strong> No same-day requests. Tomorrow can be requested before 6 PM Calgary time; after that, choose a later bake date. Availability and bakery cutoffs still apply.</p>
+      {hasExpiredSelection&&<p className="mntl-error" role="alert">Your selected date is now too soon for our bakers. Choose a new date to continue.</p>}
       <p className="mntl-hint" role="status">{liveDates?'Only dates marked with a dot are currently open for requests. Capacity is held only during real checkout.':(availability?.message||'Select a preferred date. Bakery availability will be confirmed before any payment.')}</p>
-      {preference.date && <div className="mntl-confirm"><Check size={17}/><span>Requested: <strong>{readableDate(preference.date,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</strong></span></div>}
-      {scheduled.length>0 && <div className="mntl-upcoming"><span>YOUR NEXT FOUR REQUESTED DATES</span><div>{scheduled.map(d=><span key={d}>{readableDate(d)}</span>)}</div></div>}
+      {preference.date && !hasExpiredSelection && <div className="mntl-confirm"><Check size={17}/><span>Requested: <strong>{readableDate(preference.date,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</strong></span></div>}
+      {scheduled.length>0 && !hasExpiredSelection && <div className="mntl-upcoming"><span>YOUR NEXT FOUR REQUESTED DATES</span><div>{scheduled.map(d=><span key={d}>{readableDate(d)}</span>)}</div></div>}
     </div>
     <div className="mntl-planner-block">
       <div className="mntl-planner-label"><span>{mode === 'subscription' ? '06' : '05'} — YOUR {fulfillment==='delivery'?'DELIVERY LOCATION':'PICKUP LOCATION'}</span>{fulfillment==='delivery'?<Truck size={17}/>:<MapPin size={17}/>}</div>

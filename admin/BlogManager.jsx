@@ -30,7 +30,8 @@ export function BlogManager({session,role,demoEnabled,demoPosts,setDemoPosts}) {
         headers:{apikey:OVEN_PUBLIC_KEY,Authorization:'Bearer '+session.access_token,Accept:'application/json'},cache:'no-store'
       });
       const list=await parseResponse(response);
-      setLivePosts(Array.isArray(list)?list:[]);
+      if(!Array.isArray(list)||list.length>=200)throw Error('Blog listing may be incomplete. Ask an engineer to enable pagination before editing posts.');
+      setLivePosts(list);
       setLoaded(true);
     }catch(e){setError(e.message)}finally{setLoading(false)}
   }

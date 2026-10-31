@@ -99,7 +99,7 @@ export function StickyBakeBar() {
         <FreshnessText freshness={freshness} compact/>
       </span>
       <span className="bake-ribbon-note">{active ? 'BAKER-UPDATED ESTIMATE' : 'FRESH BAKES, NO SHORTCUTS'}</span>
-      <a className="bake-ribbon-link" href="#oven" aria-label="Read more about our bakery freshness updates">
+      <a className="bake-ribbon-link" href={window.location.pathname.startsWith('/oven')?'/#oven':'#oven'} aria-label="Read more about our bakery freshness updates">
         <ArrowRight size={16}/>
       </a>
     </div>
@@ -124,7 +124,7 @@ export function BakePulse() {
           ? <strong className="oven-feature-number oven-feature-date">{calgaryClock(freshness.batch.estimated_ready_at)}</strong>
           : <strong className="oven-feature-number oven-feature-idle">{freshness.kind==='fresh'?'Fresh out':freshness.kind==='progress'?freshness.batch.stage:'Next bake TBA'}</strong>}
       <p className="oven-feature-note">{hasEstimate
-        ? 'Estimated next oven-ready time · Mountain Time'
+        ? 'Estimated next oven-ready time · Alberta Time'
         : freshness.kind === 'fresh' ? 'Our bakers have marked today’s loaves ready.'
         : freshness.kind === 'progress' ? 'Our bakers have updated the current dough stage.'
         : connection==='unavailable' ? 'Live bakery updates unavailable. Check again soon.'

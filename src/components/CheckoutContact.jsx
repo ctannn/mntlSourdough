@@ -1,23 +1,34 @@
-import React,{useState} from 'react';
+import React,{useEffect,useState} from 'react';
 import {ArrowUpRight,LockKeyhole,Mail,ShieldCheck} from 'lucide-react';
 import './CheckoutContact.css';
-import {validCadence} from '../lib/scheduling.mjs';
+import {validCadence,isCustomerBakeDateAllowed} from '../lib/scheduling.mjs';
 const validEmail=value=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 export function CheckoutContact({cart,mode,fulfillment,preference,availability,checkoutStatus,onInquiry}) {
   const [details,setDetails]=useState({firstName:'',lastName:'',email:'',phone:''});
   const [busy,setBusy]=useState(false),[message,setMessage]=useState('');
+  const [nowMs,setNowMs]=useState(()=>Date.now());
+  useEffect(()=>{
+    const timer=window.setInterval(()=>setNowMs(Date.now()),30_000);
+    return ()=>window.clearInterval(timer);
+  },[]);
   const set=(key,val)=>setDetails(p=>({...p,[key]:val}));
   const bakeDate=availability?.dates?.find(x=>x.date===preference.date);
+  const dateAllowed=isCustomerBakeDateAllowed(preference.date,new Date(nowMs));
   const canPay=Boolean(checkoutStatus?.paymentEnabled &&
     mode==='one-time' && fulfillment==='pickup' &&
-    bakeDate?.bookable && cart.length>0 && cart.every(item=>item.frequency==='one-time'));
+    dateAllowed && bakeDate?.bookable && cart.length>0 && cart.every(item=>item.frequency==='one-time'));
   const hasDate=Boolean(preference.date);
   const hasAddress=fulfillment!=='delivery'||(preference.address||'').trim().length>=6;
   const validRhythm=mode!=='subscription'||validCadence(preference.frequency,{interval:Number(preference.customInterval||0),unit:preference.customUnit||'days'});
-  const canSend=cart.length>0&&hasDate&&hasAddress&&validRhythm;
+  const canSend=cart.length>0&&hasDate&&dateAllowed&&hasAddress&&validRhythm;
   async function submit(event) {
     event.preventDefault();
     setMessage('');
+    // A previously selected date can expire while this tab stays open.
+    if(!isCustomerBakeDateAllowed(preference.date,new Date())){
+      setMessage('Same-day requests are not available. Tomorrow closes at 6 PM Calgary time. Please choose a later bake date.');
+      return;
+    }
     if(!canSend){setMessage(!validRhythm?'Choose a valid custom Bread Club interval.':'Choose your first bake date and add a loaf'+(fulfillment==='delivery'?' and delivery address':'')+'.');return;}
     if(!details.firstName.trim()||!details.lastName.trim()||!validEmail(details.email.trim())) {
       setMessage('Enter your name and valid email address.');return;
@@ -52,6 +63,7 @@ export function CheckoutContact({cart,mode,fulfillment,preference,availability,c
     </div>
     {message&&<div className="mntl-contact-message" role="alert">{message}</div>}
     {!hasDate&&<p className="mntl-contact-helper">Select a preferred bake date in the planner first.</p>}
+    {hasDate&&!dateAllowed&&<p className="mntl-contact-helper" role="alert">This date doesn't give our bakers enough notice. Choose a later bake date; tomorrow's cutoff is 6 PM Calgary time.</p>}
     {!validRhythm&&<p className="mntl-contact-helper">Choose a valid Bread Club rhythm before sending your inquiry.</p>}
     {fulfillment==='delivery'&&!hasAddress&&<p className="mntl-contact-helper">Enter your delivery address in the planner first.</p>}
     <button className="btn dark full" type="submit" disabled={!canSend||busy}>

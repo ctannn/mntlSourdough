@@ -71,6 +71,10 @@ No private API credentials are required to run the informational storefront loca
 
 The previous tiny thumbnails and an external Unsplash URL caused a broken/empty hero. **The hero and Original now use locally hosted full-resolution WebP images** in \`public/images/mntl-hero.webp\` and \`mntl-original.webp\`, with a fallback in the hero. They are generated concept photos, **not verified photos of finished MNTL inventory**. Replace them with real product photography before paid launch. Other variant images still use remote placeholders with local fallbacks. See [the design handoff](docs/BRAND-DESIGN.md).
 
+## Customer bake-date notice
+
+Customer requests require **at least the following calendar day**: same-day pickup and delivery requests are blocked. Tomorrow is requestable only **before 6:00 PM Calgary time**, after which the earliest possible bake moves to the following day. The bakery's actual open dates, capacity, and earlier cutoffs still apply. This policy is enforced in the date picker, inquiry submission, availability API, secure checkout and the checkout-holds database trigger. Authorized staff manual orders are separate. See [Order lead-time engineering guide](docs/ORDER-LEAD-TIME.md).
+
 ## The Oven journal and Bread Rhythm
 
 **The Oven** in the customer navigation now leads to the dedicated MNTL blog at `/oven`; each published post has a permanent `/oven/:slug` URL. Staff edit drafts and publish articles in the new **The Oven — Posts** area of `/admin`. Images can be uploaded through a restricted Supabase Storage bucket. Every public article is protected by published-only RLS; no sample posts are visible on the website. Details and QA: [The Oven journal guide](docs/OVEN-JOURNAL.md).
