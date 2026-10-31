@@ -23,7 +23,7 @@ This is a **calendar-day notice rule with a 6 PM previous-day cutoff**, not a st
 - `src/main.jsx`: checks the rule before opening the mailto order inquiry.
 - `api/availability.js`: excludes early dates from online availability even when an old bake-day cutoff allows them.
 - `api/checkout.js`: rejects too-soon dates (HTTP 422) before capacity reservation or Stripe; additionally checks the published bake-day cutoff.
-- `supabase/migrations/20261031103400_customer_bake_notice.sql`: a database trigger on `checkout_holds` rejects same-day holds and after-6-PM next-day holds, independently of the UI or API. The database uses post-2026 permanent Alberta UTC−6, consistent with the app.
+- `supabase/migrations/20261031104018_customer_bake_notice.sql`: a database trigger on `checkout_holds` rejects same-day holds and after-6-PM next-day holds, independently of the UI or API. The database uses post-2026 permanent Alberta UTC−6, consistent with the app.
 - Bakery staff retain separately authorized manual-order functionality for exceptional situations; this customer-facing rule does not silently override staff authority.
 
 ## QA
