@@ -5,15 +5,15 @@
 
 Small-batch sourdough in Calgary. This repository contains the public **MNTL** storefront and a staff-only bakery operations app.
 
-**Live URLs:** [Storefront](https://runmntl.com) · [Staff dashboard](https://runmntl.com/admin) · [Operations & launch guide](docs/OPERATIONS-LAUNCH-RUNBOOK.md)
+**Current production URLs:** [Storefront](https://runmntl.com) · [Staff dashboard](https://runmntl.com/admin) · **Pending release:** [The Oven journal](https://runmntl.com/oven) · [Operations guide](docs/OPERATIONS-LAUNCH-RUNBOOK.md)
 
-> **Commerce status:** the storefront currently collects **email inquiries**, not payments. Stripe checkout, recurring billing, verified webhooks, email notifications, taxes, delivery zones and refund logic still require implementation/testing before launch. Do not imply a purchase is complete.
+> **Commerce status:** the storefront currently collects **email inquiries**, not payments. Guarded Stripe pickup Checkout and webhook code exist, but payment environment flags and production credentials are deliberately disabled. Recurring billing, delivery charges, end-to-end payment tests and customer notifications remain launch blockers. Do not imply an inquiry is a paid order.
 
 ## Stack
 
-- **React 18 + Vite** — static multipage build: `index.html` and `admin.html`.
+- **React 18 + Vite** — static storefront and staff build (`index.html`, `admin.html`), with blog routes rewritten to the storefront SPA.
 - **Vercel** — GitHub-connected deployment; `runmntl.com` primary, `runmntl.ca` redirects.
-- **Supabase** — staff authentication, RLS-protected operations tables, and explicitly published public batch updates.
+- **Supabase** — staff authentication, RLS-protected operations and blog posts, restricted blog media uploads, and baker-published freshness updates.
 - **lucide-react** — interface icons.
 - **Stripe test account** — connected externally but **not integrated into the storefront**.
 
@@ -28,7 +28,7 @@ npm run build
 npm run preview
 ```
 
-Vite serves the storefront at `/` and the operations page at `/admin.html`. Vercel `vercel.json` additionally rewrites `/admin` to `/admin.html`.
+Vite serves the storefront at `/` and the operations page at `/admin.html`. Vercel rewrites `/admin` to `/admin.html` and `/oven` / `/oven/:slug` to the storefront entrypoint. Run `npm run test` and `npm run build` before merging.
 
 No private API credentials are required to run the informational storefront locally. **Never commit Stripe secret keys or Supabase service-role credentials.** The `sb_publishable_…` value used in the public browser is intentionally a publishable key; RLS protects its data access.
 
@@ -40,11 +40,17 @@ No private API credentials are required to run the informational storefront loca
 | `src/components/Hero.jsx` | Independent editorial hero, artwork/copy and primary conversion CTAs |
 | `src/components/BakeExperience.jsx` | Baker-published oven ETA polling, one sticky freshness bar and compact public status panel |
 | `src/components/BakeExperience.css` | Sticky ribbon and Oven styles, including mobile |
+| `src/components/OvenJournal.jsx`, `OvenJournal.css` | Public blog index, individual articles, responsive reading experience and empty state |
+| `src/components/StoryBody.jsx`, `src/lib/ovenJournal.mjs` | Safe article renderer, publishing validation, slugs and public visibility |
 | `src/style.css` | Existing storefront structural styles |
 | `src/editorial.css` | Current **v3 product-first MNTL design tokens** and responsive CSS; loaded after structural styles |
 | `public/images/original.webp` | Archived compact concept image (too low-res for current hero; not in use) |
-| `public/images/original-product.webp` | Archived small concept crop; current photos are high-resolution stand-ins |
+| `public/images/original-product.webp` | Archived small concept crop; no longer used |
+| `public/images/mntl-hero.webp`, `mntl-original.webp` | Locally hosted high-resolution sourdough concept photos; no fragile external hero URL |
 | `admin/main.jsx` | Operations, authenticated demo toggle, customer drill-down and baker-controlled oven ETA |
+| `admin/BlogManager.jsx`, `admin/BlogManager.css`, `admin/demoOvenPosts.js` | Authenticated blog drafts, publishing, restricted cover uploads and isolated sample posts |
+| `src/lib/scheduling.mjs` | Validated Bread Club recurrence calculations, including custom daily/weekly and monthly dates |
+| `supabase/migrations/20261031_*` | Tracked blog schema/RLS and author-attribution index migrations |
 | `admin/demoData.js` | Deterministic fake customers, linked orders/subscriptions, safe local-only demo mutations |
 | `admin/productionMetrics.js` | Pure, tested recipe/order/calendar aggregation for live and demo views |
 | `admin/bakeTime.js`, `src/components/batchStatus.js` | Calgary ABT oven timestamps, public selection/formatting (both unit-tested) |
@@ -63,7 +69,13 @@ No private API credentials are required to run the informational storefront loca
 
 **Visual v3:** MNTL is a bold, product-led Calgary bakery with a little running-club attitude—not a generic serif/terracotta lifestyle advertisement and not a neon supermarket promotion. \`src/editorial.css\` defines a clean ink/off-white palette, restrained wheat accent, compact shop/navigation components and a full-height **split hero**: bold sans-serif copy on the left, a sharp full-size bread photograph on the right. The hero itself lives in \`src/components/Hero.jsx\`.
 
-The original local \`public/images/original*.webp\` thumbnails were too small and visibly blurry when stretched. They are **legacy assets only**; the current storefront uses high-resolution Unsplash photography with \`w=1400–2400&q=90\` for hero, product and crumb imagery, preconnecting and preloading the hero URL. This is a **temporary licensed image stand-in**, not verified photography of an actual MNTL loaf. The bakery should replace it with first-party high-resolution product photos before accepting paid orders. Do not imply stock images are photos of the actual product. See [the design handoff](docs/BRAND-DESIGN.md).
+The previous tiny thumbnails and an external Unsplash URL caused a broken/empty hero. **The hero and Original now use locally hosted full-resolution WebP images** in \`public/images/mntl-hero.webp\` and \`mntl-original.webp\`, with a fallback in the hero. They are generated concept photos, **not verified photos of finished MNTL inventory**. Replace them with real product photography before paid launch. Other variant images still use remote placeholders with local fallbacks. See [the design handoff](docs/BRAND-DESIGN.md).
+
+## The Oven journal and Bread Rhythm
+
+**The Oven** in the customer navigation now leads to the dedicated MNTL blog at `/oven`; each published post has a permanent `/oven/:slug` URL. Staff edit drafts and publish articles in the new **The Oven — Posts** area of `/admin`. Images can be uploaded through a restricted Supabase Storage bucket. Every public article is protected by published-only RLS; no sample posts are visible on the website. Details and QA: [The Oven journal guide](docs/OVEN-JOURNAL.md).
+
+**Bread Club** supports weekly, every 2 weeks, every 3 weeks, monthly, and **custom 1–90 day or 1–12 week rhythms**. Dates are previews and inquiries only; recurring billing is **not active**. All custom choices carry through the contact inquiry, summary and recurrence preview. The database's current paid subscription schema still models weekly/biweekly; persistent custom billing needs separate future engineering.
 
 ## Real bakery oven countdown
 

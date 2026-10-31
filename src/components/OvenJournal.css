@@ -1,0 +1,102 @@
+/* THE OVEN / MNTL's journal. Scoped to avoid affecting storefront cart/checkout. */
+.oven-journal-main{background:#f7f7f2;color:#18211d;min-height:60vh}
+.oven-top-nav{height:77px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 clamp(23px,5vw,92px);background:#fffefa;border-bottom:1px solid #dde1d7;position:relative;z-index:20}
+.oven-wordmark{font:800 40px/.95 'Space Grotesk',sans-serif;letter-spacing:-.1em;color:#14241a;white-space:nowrap}.oven-wordmark span{font-size:17px;vertical-align:top;letter-spacing:0;color:#a36a39}
+.oven-top-nav nav{display:flex;align-items:center;gap:clamp(16px,3vw,45px)}
+.oven-top-nav nav a,.oven-shop-button{font-size:10px;font-weight:800;letter-spacing:.07em;color:#18271d}
+.oven-top-nav nav a:hover{color:#986c42}
+.oven-top-nav nav a[aria-current]{color:#9b6339}
+.oven-current-dot{font-size:7px;color:#d7a250;vertical-align:middle}
+.oven-shop-button{background:#192720;color:#fff;padding:15px 18px;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.oven-shop-button:hover,.oven-primary-link:hover{background:#38523e}
+.oven-nav-toggle{display:none;background:none;color:#192720}
+.oven-journal-hero{padding:48px clamp(24px,6vw,108px) 40px;min-height:550px;background:#1c2a20;color:#f7f4e9;display:flex;flex-direction:column}
+.oven-journal-kicker,.oven-journal-bottom{display:flex;justify-content:space-between;gap:22px;font-size:10px;font-weight:800;letter-spacing:.15em;color:#bfcabd}
+.oven-journal-heading{display:flex;align-items:center;justify-content:space-between;gap:40px;flex:1;padding:48px 0}
+.oven-journal-heading h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(85px,12vw,190px);letter-spacing:-.095em;line-height:.8;margin:0 0 24px;font-weight:800}
+.oven-journal-heading h1 em{font-style:normal;color:#d6b077}
+.oven-journal-heading p{font-size:clamp(15px,1.3vw,20px);line-height:1.55;max-width:500px;color:#d6dfd4}
+.oven-journal-hero-mark{font-size:clamp(160px,26vw,400px);line-height:.8;font-weight:400;color:#d2b17e;opacity:.88}
+.oven-journal-bottom{padding-top:24px;border-top:1px solid #415449}
+.oven-featured-post{display:grid;grid-template-columns:55% 45%;max-width:1600px;margin:0 auto;min-height:500px;padding:72px clamp(24px,6vw,92px);gap:clamp(25px,5vw,80px);align-items:center}
+.oven-featured-image a{display:block;height:100%}.oven-featured-image{height:clamp(340px,34vw,540px)}
+.oven-cover{width:100%;height:100%;position:relative;overflow:hidden;background:#2d392e}
+.oven-cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+.oven-featured-copy{padding:20px 5% 20px 0}
+.oven-post-label{font-size:10px;font-weight:900;color:#8a673d;letter-spacing:.15em;text-transform:uppercase}
+.oven-featured-copy h2{font-size:clamp(43px,5vw,76px);line-height:1.03;letter-spacing:-.07em;margin:27px 0}
+.oven-featured-copy p{line-height:1.65;color:#5c6b60;font-size:16px;max-width:430px}
+.oven-featured-copy small{display:block;margin:20px 0 35px;color:#788479}
+.oven-primary-link{border:0;background:#17271d;color:white;font-size:11px;letter-spacing:.06em;font-weight:800;display:inline-flex;align-items:center;gap:20px;padding:17px 21px;cursor:pointer}
+.oven-posts-section{max-width:1600px;padding:35px clamp(24px,6vw,92px) 115px;margin:auto}
+.oven-posts-heading{display:flex;align-items:end;justify-content:space-between;gap:25px;border-top:1px solid #b9c4b9;padding-top:28px;margin-bottom:37px}
+.oven-posts-heading h2{font-size:clamp(45px,5vw,82px);letter-spacing:-.075em;margin:7px 0 0}
+.oven-posts-heading>span{font-size:10px;font-weight:900;color:#768477;letter-spacing:.13em}
+.oven-post-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.oven-post-card-cover{display:block;height:auto;aspect-ratio:1.22;margin-bottom:19px}.oven-post-card-cover .oven-cover{height:100%}
+.oven-post-meta{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;color:#7c887b;font-size:11px;font-weight:700}
+.oven-post-meta>span:first-child{text-transform:uppercase;letter-spacing:.07em;color:#986941}
+.oven-post-card h3{font-size:clamp(25px,2.6vw,40px);line-height:1.12;letter-spacing:-.055em;margin:18px 0 13px}
+.oven-post-card h3 a:hover,.oven-featured-copy h2 a:hover{color:#976a3f}
+.oven-post-card>p{color:#69756a;font-size:14px;line-height:1.6;min-height:68px}
+.oven-read-link{font-size:10px;font-weight:900;letter-spacing:.12em;display:inline-flex;align-items:center;gap:12px;border-bottom:1px solid #768a71;padding-bottom:8px}
+.oven-read-link:hover{color:#986941;border-color:currentColor}
+.oven-quiet-state,.oven-loading{min-height:450px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:65px clamp(28px,9vw,160px)}
+.oven-quiet-state>svg{color:#a07846;margin-bottom:24px}.oven-quiet-state>span{font-size:10px;font-weight:900;letter-spacing:.14em;color:#a17945}
+.oven-quiet-state h1,.oven-quiet-state h2{font-size:clamp(45px,6vw,90px);line-height:1.05;letter-spacing:-.07em;margin:14px 0}
+.oven-quiet-state p{font-size:16px;color:#6b776a;line-height:1.65;max-width:500px;margin-bottom:28px}
+.oven-loading{font-size:13px;font-weight:900;letter-spacing:.12em}
+.oven-article{max-width:1350px;margin:auto;padding:70px clamp(24px,7vw,100px) 115px}
+.oven-article-head{max-width:880px;margin:0 auto 50px}
+.oven-article-back{display:inline-flex;align-items:center;gap:11px;margin-bottom:48px;font-size:11px;font-weight:900;letter-spacing:.1em;color:#546b56}
+.oven-article-back:hover{color:#986b41}
+.oven-article-head>.oven-post-meta{justify-content:flex-start;gap:20px}
+.oven-article h1{font-size:clamp(52px,7vw,111px);line-height:1.01;letter-spacing:-.077em;margin:24px 0}
+.oven-article-excerpt{color:#5d6c60;font-size:clamp(17px,2vw,24px);line-height:1.55;max-width:750px}
+.oven-article-byline{display:flex;align-items:center;gap:9px;margin-top:25px;font-size:10px;font-weight:800;letter-spacing:.11em;color:#81927f}
+.oven-article-cover{width:100%;aspect-ratio:1.8;overflow:hidden}.oven-article-cover .oven-cover{height:100%}
+.oven-article-content{max-width:760px;margin:62px auto 70px}
+.oven-story-body{font-size:17px;line-height:1.86;color:#34443a;overflow-wrap:anywhere}
+.oven-story-body p{margin:0 0 28px}
+.oven-story-body h2{font-size:clamp(29px,3vw,46px);letter-spacing:-.055em;line-height:1.16;color:#1b2b21;margin:48px 0 16px}
+.oven-story-body h3{font-size:clamp(22px,2.4vw,32px);letter-spacing:-.03em;line-height:1.25;color:#1b2b21;margin:35px 0 14px}
+.oven-story-body ul{padding-left:26px;margin:0 0 28px}.oven-story-body li{padding-left:5px;margin-bottom:10px}
+.oven-story-body a{color:#966a42;text-decoration:underline;text-underline-offset:3px}
+.oven-story-body strong{font-weight:800;color:#15291b}
+.oven-article-tail{border-top:1px solid #c9d3c6;padding:30px 0;display:flex;justify-content:space-between;gap:24px;align-items:center;font-size:10px;letter-spacing:.11em;font-weight:800;color:#718472}
+.oven-article-tail a{display:flex;align-items:center;gap:10px;color:#253d29}
+.oven-journal-cta{background:#dfe5d7;color:#17271b;padding:72px clamp(24px,6vw,100px);display:flex;align-items:end;justify-content:space-between;gap:30px}
+.oven-journal-cta span{font-size:10px;font-weight:800;letter-spacing:.16em;color:#71846b}
+.oven-journal-cta h2{font-size:clamp(40px,5vw,76px);letter-spacing:-.075em;line-height:1.02;margin:15px 0 0}
+.oven-journal-cta>a{background:#16271c;color:white;white-space:nowrap;display:flex;gap:18px;align-items:center;padding:18px;font-weight:900;font-size:11px}
+.oven-footer{background:#111d16;color:#f8f8ef;padding:56px clamp(24px,5vw,100px) 27px;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.oven-footer .oven-wordmark{color:#f9f9ef;font-size:65px}.oven-footer>div{display:flex;gap:22px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.oven-footer>div a{font-size:11px;font-weight:800;letter-spacing:.05em}
+.oven-footer>div a:hover{color:#ecc383}
+.oven-footer p{border-top:1px solid #3b4d3d;padding-top:25px;grid-column:span 2;color:#a7bca9;font-size:10px;letter-spacing:.1em;margin:0}
+@media(max-width:950px){
+  .oven-top-nav{padding:0 24px}.oven-top-nav nav{gap:18px}
+  .oven-journal-hero-mark{font-size:220px}
+  .oven-featured-post{grid-template-columns:1fr 1fr;gap:30px}
+  .oven-post-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .oven-top-nav{height:67px;gap:12px}.oven-wordmark{font-size:34px}
+  .oven-top-nav nav{display:none;position:absolute;left:0;right:0;top:67px;padding:25px;background:#fffefa;box-shadow:0 16px 25px #17251b26;flex-direction:column;align-items:flex-start;gap:26px}
+  .oven-top-nav nav.is-expanded{display:flex}.oven-top-nav nav a{font-size:12px}
+  .oven-nav-toggle{display:block;margin-left:auto}.oven-shop-button{font-size:9px;padding:12px}
+  .oven-journal-hero{min-height:470px;padding:27px 6%}.oven-journal-kicker,.oven-journal-bottom{font-size:8px}
+  .oven-journal-heading{padding:40px 0}.oven-journal-heading h1{font-size:clamp(83px,17vw,130px)}
+  .oven-journal-hero-mark{display:none}.oven-journal-heading p{font-size:15px}
+  .oven-featured-post{grid-template-columns:1fr;padding:55px 6%;gap:21px}
+  .oven-featured-image{height:300px}.oven-featured-copy{padding:0}.oven-featured-copy h2{font-size:45px}
+  .oven-posts-section{padding:15px 6% 75px}.oven-post-grid{grid-template-columns:1fr;gap:45px}
+  .oven-post-card-cover{aspect-ratio:1.3}
+  .oven-article{padding:45px 6% 65px}.oven-article-head{margin-bottom:30px}
+  .oven-article-back{margin-bottom:35px}.oven-article h1{font-size:clamp(44px,9.7vw,70px)}
+  .oven-article-cover{aspect-ratio:1.2}.oven-article-content{margin:35px auto 45px}
+  .oven-story-body{font-size:15px}.oven-article-tail{flex-direction:column;align-items:flex-start}
+  .oven-journal-cta{padding:55px 6%;align-items:flex-start;flex-direction:column}
+  .oven-footer{padding:45px 6% 25px;grid-template-columns:1fr;gap:25px}.oven-footer>div{justify-content:flex-start}.oven-footer p{grid-column:1}
+}
+@media(prefers-reduced-motion:reduce){.oven-top-nav,.oven-post-card{scroll-behavior:auto}}

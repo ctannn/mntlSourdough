@@ -93,7 +93,7 @@ export function StickyBakeBar() {
   const active = freshness.kind === 'countdown';
   return <div className={'bake-ribbon' + (active ? ' is-counting' : '')} aria-label="MNTL bakery oven update">
     <div className="bake-ribbon-inner">
-      <span className="bake-ribbon-kicker"><Flame size={15} aria-hidden="true"/> MNTL / THE OVEN</span>
+      <span className="bake-ribbon-kicker"><Flame size={15} aria-hidden="true"/> MNTL / FRESHNESS</span>
       <span className="bake-ribbon-separator" aria-hidden="true"/>
       <span className="bake-ribbon-content" role="status" aria-live="off">
         <FreshnessText freshness={freshness} compact/>

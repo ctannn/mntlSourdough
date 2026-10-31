@@ -41,3 +41,15 @@
 @media(prefers-reduced-motion:reduce){.mntl-day{transition:none}}
 
 .mntl-day.is-bookable:not(.is-selected):not(:disabled){position:relative;background:#f3e7d8;border-color:#dcc6b0}.mntl-day.is-bookable:not(.is-selected):not(:disabled)::after{content:'';position:absolute;bottom:3px;left:calc(50% - 2px);width:4px;height:4px;background:#976745;border-radius:50%}
+
+/* Bread Club rhythm — simple presets, expandable custom intervals. */
+.mntl-rhythm-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mntl-rhythm-options button{min-height:47px;padding:12px 10px;border-color:#b6c6b3;background:#fcfdf9;color:#253d2c;font-size:12px}
+.mntl-rhythm-options button.is-selected{background:#dde8d7;border-color:#678c67;color:#1a3c24}
+.mntl-rhythm-options button:last-child{grid-column:1/-1;letter-spacing:.05em}
+.mntl-custom-rhythm{display:flex;align-items:center;flex-wrap:wrap;gap:10px;background:#e7ede2;border:1px solid #bfcfba;padding:16px 18px;margin-top:14px}
+.mntl-custom-rhythm>label:first-child{font-size:12px;font-weight:800;color:#273a2b}
+.mntl-custom-rhythm input,.mntl-custom-rhythm select{height:44px;background:#fff;border:1px solid #b8c8b5;padding:0 10px;color:#203725;font-size:14px}
+.mntl-custom-rhythm input{width:83px}.mntl-custom-rhythm select{min-width:120px}
+.mntl-rhythm-options button:focus-visible,.mntl-custom-rhythm input:focus-visible,.mntl-custom-rhythm select:focus-visible{outline:3px solid #ab8547;outline-offset:2px}
+@media(max-width:480px){.mntl-rhythm-options{grid-template-columns:1fr 1fr}.mntl-rhythm-options button{font-size:11px}.mntl-custom-rhythm{gap:8px;padding:12px}.mntl-custom-rhythm input{width:72px}}

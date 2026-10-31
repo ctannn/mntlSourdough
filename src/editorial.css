@@ -283,3 +283,10 @@ footer {background:var(--mntl-deep);color:#f6f7ec;}
   .ticker div {animation:none;}
   .hero-button,.quick-add,.btn {transition:none;}
 }
+
+
+/* Blog nav is a real link, not a button; keep the original storefront rhythm. */
+.header .nav a{font:800 10px 'DM Sans',Arial,sans-serif;letter-spacing:.075em;color:#344238;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:none}
+.header .nav a:hover{color:#a57446}
+@media(max-width:1180px){.header .nav a{font-size:9px}}
+@media(max-width:650px){.header .nav a{font-size:12px;padding:10px 5px}}

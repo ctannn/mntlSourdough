@@ -1,1 +1,44 @@
-{"rewrites":[{"source":"/admin","destination":"/admin.html"}],"headers":[{"source":"/admin.html","headers":[{"key":"Cache-Control","value":"no-store"},{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"}]},{"source":"/admin","headers":[{"key":"Cache-Control","value":"no-store"}]}]}
+{
+  "rewrites": [
+    {
+      "source": "/oven",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/oven/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/admin.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}

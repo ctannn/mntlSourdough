@@ -35,7 +35,7 @@ export function Hero({image, onShop, onStory}) {
       </div>
       <div className="hero-visual">
         <img src={image} alt="Rustic, golden-crusted artisan sourdough bread"
-             fetchPriority="high" decoding="async"/>
+             fetchPriority="high" decoding="async" onError={e=>{const img=e.currentTarget;img.onerror=null;img.src="/images/mntl-original.webp"}}/>
         <span className="hero-visual-label">MADE SLOWLY. GONE QUICKLY.</span>
         <span className="hero-photo-index" aria-hidden="true">MNTL / 001</span>
       </div>

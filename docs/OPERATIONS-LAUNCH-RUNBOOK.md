@@ -18,6 +18,12 @@ Last updated: 2026-10-30. Project: [runmntl.com](https://runmntl.com) / [admin.h
 8. **Deliveries**: select a date to see a pickup list and delivery queue based only on paid orders.
 9. **Oven countdown**: staff select a bake date, set the dough stage and the next estimated time loaves leave the oven (in Calgary/Alberta time), then publish. The small sticky customer bar counts down to this real estimate. There are no customer Start/Pause buttons and no invented countdown. See [Oven Countdown Guide](OVEN-COUNTDOWN.md).
 
+10. **The Oven — Posts**: active owners/bakers can create, preview, publish and unpublish journal articles and upload cover images. Public blog: `/oven`; detail: `/oven/:slug`. The blog is separate from the **Oven countdown**. Support staff can review drafts but not publish. **Demo Mode** keeps sample posts local and never sends them to the public site. See [The Oven editor guide](OVEN-JOURNAL.md).
+
+### Customer Bread Club cadence
+
+Recurring **inquiry preferences** now include weekly, every 2 weeks, every 3 weeks, monthly and custom every X days/weeks (1–90 days or 1–12 weeks). The first requested date anchors a four-occurrence preview. All requested dates are subject to actual bakery capacity and confirmation. This does **not** activate recurring paid subscriptions; the operational `subscriptions` database and forecasting are still centered on existing weekly/biweekly plans. Extend these intentionally in a future payment/subscription migration before promising automatic custom subscriptions.
+
 ### Scheduling bake days
 
 From **Bake calendar** or **Bake list**, select a day and choose **Schedule date** or **Bake settings**. Enter maximum capacity and status (open/closed/baking/completed). The prototype calculates the default order cutoff at **6:00 PM Alberta bakery time one day before** the bake. Alberta will remain UTC−6 year-round starting November 2026; the conversion is explicit and independent of a staff device's timezone. Production days are **not** automatically generated. An unscheduled date does not accept online checkout.

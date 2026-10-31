@@ -28,13 +28,27 @@ Keep the font-weight hierarchy and product images doing the work. Avoid giant mo
 
 The copy uses the existing MNTL line **"IT'S JUST BREAD. UNTIL IT ISN'T."** in direct geometric type. Primary CTA goes to the product grid. Secondary CTA goes to the story. Three small brand facts establish craft without reading like a promotion.
 
-### Image status
+### Image status (release candidate)
 
-The initial generated Original loaf was committed as \`public/images/original.webp\` and \`public/images/original-product.webp\`, but these are **low-resolution compressed concept thumbnails** and appeared blurry at hero dimensions. They remain archived, **not used by the current website**.
+The initial generated Original images in \`public/images/original*.webp\` were tiny compressed thumbnails and became blurry when stretched. An external Unsplash hero photo also failed to load, leaving a large empty block.
 
-As an interim fix, \`src/main.jsx\` now uses high-resolution responsive Unsplash image URLs with requested source widths **1,400px for product cards and 2,400px for the hero**, and the hero image is preloaded in \`index.html\`. The files are licensed third-party concept references, **not photographs of actual MNTL inventory**. Before paid sales, replace these with real, sharp MNTL product photography (minimum ~1,500px product / 2,200px hero, modern WebP/AVIF, \`srcset\` if appropriate).
+The replacement **ships with the repository**:
 
-The full-resolution original generated concept photo also exists as a project conversation asset but is not currently uploaded into the GitHub \`public/images\` directory. Future developers should not point the site at the archived small WebP files.
+- \`public/images/mntl-hero.webp\`: locally hosted 1080×880 WebP sourdough concept photo
+- \`public/images/mntl-original.webp\`: locally hosted 820×920 portrait crop
+- \`src/components/Hero.jsx\`: first-party hero photo with a local fallback
+- \`index.html\`: local hero image preload and first-party social image
+- \`src/main.jsx\`: Original product image and large photo-break use local assets; other variants retain remotely hosted placeholders with local fallback
+
+These photos are **AI-generated concept imagery**, not verified photos of MNTL's actual inventory. Replace with professionally photographed MNTL bread before paid launch, with accurate variant-specific images. Never call conceptual photography a guaranteed representation of the delivered item.
+
+## The Oven journal and Bread Club rhythm
+
+**The Oven** in the navigation is now the journal/blog at \`/oven\`, not the bakery clock. It includes a dark MNTL editorial index, featured story, additional article cards, and dedicated reading pages. Staff owners/bakers publish and manage posts in \`/admin\` → **The Oven — Posts**. Public readers see only published posts (Supabase RLS), with an intentional empty state before the first article. See [OVEN-JOURNAL.md](OVEN-JOURNAL.md).
+
+The **small sticky freshness bar** still reports the real baker-published next oven-ready time from Admin → **Oven countdown**, now labeled **FRESHNESS** to avoid confusing it with the blog.
+
+The Bread Club scheduling widget has preset weekly, biweekly, every three weeks, monthly and expandable custom X-day/X-week options. Custom selections are clearly described as **requested rhythms**, not live billing subscriptions.
 
 ## Oven freshness bar
 

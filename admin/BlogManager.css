@@ -1,0 +1,64 @@
+/* Oven editorial CMS, scoped away from operations calendar and forms. */
+.oven-admin{padding:30px!important}
+.oven-admin-head{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-bottom:28px;border-bottom:1px solid #e0e8dc}
+.oven-admin-head h2{font-size:clamp(29px,3vw,44px);margin:9px 0}
+.oven-admin-head p{font-size:13px;color:#708070;line-height:1.55;max-width:630px;margin:0}
+.oven-admin-head p a{color:#457843;text-decoration:underline}
+.oven-admin-banner{background:#fff1ca;border:1px solid #efd99c;padding:14px 16px;margin:20px 0;font-size:12px;line-height:1.5;color:#855d22;font-weight:700;border-radius:8px}
+.oven-admin-error,.oven-admin-message{border-radius:8px;padding:13px 16px;margin:17px 0;font-size:12px;line-height:1.5}
+.oven-admin-error{background:#fcebe7;border:1px solid #e9b9af;color:#913f30}
+.oven-admin-message{background:#e7f3df;border:1px solid #c4dfb1;color:#38622d}
+.oven-admin-layout{display:grid;grid-template-columns:minmax(210px,290px) minmax(0,1fr);gap:28px;padding-top:24px;min-height:540px}
+.oven-admin-list{border-right:1px solid #e0e8dc;padding-right:17px;min-width:0}
+.oven-admin-list-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.oven-admin-list-title strong{font-size:10px;letter-spacing:.12em;color:#70836c}
+.oven-admin-list-title strong span{background:#e5eddc;padding:4px 7px;border-radius:12px;margin-left:4px}
+.oven-admin-list-title button{display:grid;place-items:center;padding:8px;background:#edf4e8;border-radius:7px;color:#4a6344}
+.oven-admin-list-item{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;background:#f6f9f3;border:1px solid #e8eee3;padding:14px 12px;margin-bottom:8px;width:100%;border-radius:8px}
+.oven-admin-list-item:hover{border-color:#aecb9d}
+.oven-admin-list-item.is-active{background:#eaf1e4;border-color:#83a879}
+.oven-admin-list-item strong{font-size:13px;color:#1e3524;line-height:1.35}
+.oven-admin-list-item small{font-size:10px;color:#7d9079;line-height:1.4;overflow-wrap:anywhere}
+.oven-admin-status{display:inline-flex;font-size:9px;font-weight:900;letter-spacing:.1em;padding:5px 8px;border-radius:20px}
+.oven-admin-status.is-draft{background:#f7eddb;color:#94703c}
+.oven-admin-status.is-published{background:#daefd1;color:#417438}
+.oven-admin-public-link{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:800;color:#386b37;margin-top:20px}
+.oven-admin-public-link:hover{text-decoration:underline}
+.oven-admin-editor{min-width:0}
+.oven-admin-editor-title{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.oven-admin-editor-title h3{font-size:clamp(23px,2.3vw,32px);line-height:1.15;margin:8px 0 12px;overflow-wrap:anywhere}
+.oven-admin-editor-tabs{display:flex;gap:6px;border-bottom:1px solid #e0e8dc;margin:7px 0 23px}
+.oven-admin-editor-tabs button{display:flex;align-items:center;gap:7px;background:transparent;color:#778774;border-bottom:2px solid transparent;font-size:11px;letter-spacing:.09em;font-weight:800;padding:13px 18px}
+.oven-admin-editor-tabs button.is-active{border-bottom-color:#476b43;color:#2e5034}
+.oven-admin-form{display:grid;gap:17px}
+.oven-admin-form label{display:grid;gap:8px;font-size:11px;letter-spacing:.035em;font-weight:800;color:#445b45;min-width:0}
+.oven-admin-form input,.oven-admin-form textarea,.oven-admin-form select{background:#fcfefb;border:1px solid #cfdbce;border-radius:7px;padding:12px 14px;color:#243527;font-size:13px;font-weight:500;letter-spacing:0;width:100%;min-width:0}
+.oven-admin-form input:focus,.oven-admin-form textarea:focus{border-color:#75a17a;outline:2px solid #dcebd6}
+.oven-admin-form input:disabled,.oven-admin-form textarea:disabled{background:#f2f4f0}
+.oven-admin-form textarea{resize:vertical;min-height:90px;line-height:1.6}
+.oven-admin-form .oven-admin-body{min-height:260px;font-family:ui-monospace,'Cascadia Code',monospace;font-size:12px}
+.oven-admin-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,200px);gap:14px}
+.oven-admin-slug{display:flex;align-items:center;border:1px solid #cfdbce;border-radius:7px;overflow:hidden;min-width:0;background:#f4f7f0}
+.oven-admin-slug span{font-size:11px;color:#6c7d68;padding:0 12px;white-space:nowrap}
+.oven-admin-slug input{border:0;border-left:1px solid #cfdbce;border-radius:0;flex:1}
+.oven-admin-field-note{font-size:10px;line-height:1.6;font-weight:500;color:#81907c;letter-spacing:0}
+.oven-admin-upload{display:inline-flex!important;align-items:center;justify-content:center;gap:11px;border:1px dashed #91ad8c;border-radius:9px;padding:15px 18px;background:#f1f7ec;cursor:pointer;text-align:center}
+.oven-admin-upload input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.oven-admin-upload:hover{background:#e6f2df}
+.oven-admin-actions{display:flex;flex-wrap:wrap;gap:11px;margin:26px 0 7px;padding-top:20px;border-top:1px solid #e2e9df}
+.oven-admin-actions button{min-height:42px}
+.oven-admin-delete{display:inline-flex;align-items:center;gap:7px;padding:12px;background:#f9e9e6;color:#914738;border-radius:7px;font-size:11px;font-weight:800}
+.oven-admin-delete:hover{background:#f1d6ce}
+.oven-admin-hint{font-size:11px;line-height:1.6;color:#81917a}
+.oven-admin-preview{max-width:700px}
+.oven-admin-preview>span{font-size:10px;letter-spacing:.12em;color:#688367;text-transform:uppercase;font-weight:800}
+.oven-admin-preview>img{display:block;width:100%;max-height:360px;object-fit:cover;margin:16px 0}
+.oven-admin-preview h2{font-size:clamp(35px,3.8vw,56px);letter-spacing:-.06em;line-height:1.05;margin:15px 0}
+.oven-admin-preview-excerpt{font-size:16px;line-height:1.65;color:#637761}
+.oven-admin-preview .oven-story-body{font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+.oven-admin-preview .oven-story-body h2{font-size:28px}
+.oven-admin-preview .oven-story-body h3{font-size:21px}
+.oven-admin-preview .oven-story-body a{color:#416d39;text-decoration:underline}
+@media(max-width:1100px){.oven-admin-layout{grid-template-columns:220px minmax(0,1fr);gap:18px}.oven-admin{padding:20px!important}}
+@media(max-width:850px){.oven-admin-layout{grid-template-columns:1fr}.oven-admin-list{border-right:none;border-bottom:1px solid #dce4d9;padding:0 0 15px}.oven-admin-list-item{display:inline-flex;width:min(255px,100%);margin:0 7px 8px 0;vertical-align:top}}
+@media(max-width:600px){.oven-admin-head{flex-direction:column;align-items:flex-start}.oven-admin-row{grid-template-columns:1fr}.oven-admin-slug{flex-direction:column;align-items:stretch}.oven-admin-slug span{padding:10px 12px}.oven-admin-slug input{border-left:0;border-top:1px solid #cfdbce}.oven-admin-actions{gap:8px}}
