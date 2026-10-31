@@ -15,6 +15,27 @@ export function calgaryToday(now = new Date()) {
   const date = Object.fromEntries(parts.map(part => [part.type, part.value]));
   return date.year + '-' + date.month + '-' + date.day;
 }
+// Customer order policy: no same-day requests. Tomorrow is eligible before
+// 6 PM Calgary time; at/after 6 PM the earliest possible date is in two days.
+// The bakery's actual published cutoff/availability can be stricter.
+export const CUSTOMER_BAKE_CUTOFF_HOUR = 18;
+export function calgaryHour(now = new Date()) {
+  if (!(now instanceof Date) || !Number.isFinite(now.getTime())) throw new Error('Invalid current time');
+  if (now.getTime() >= Date.parse('2026-03-08T09:00:00Z')) {
+    return new Date(now.getTime()-6*60*60*1000).getUTCHours();
+  }
+  const value = new Intl.DateTimeFormat('en-US',{
+    timeZone:'America/Edmonton',hour:'2-digit',hourCycle:'h23'
+  }).format(now);
+  return Number(value);
+}
+export function earliestCustomerBakeDate(now = new Date()) {
+  const today = calgaryToday(now);
+  return addDateDays(today, calgaryHour(now) >= CUSTOMER_BAKE_CUTOFF_HOUR ? 2 : 1);
+}
+export function isCustomerBakeDateAllowed(date, now = new Date()) {
+  return isISODate(date) && date >= earliestCustomerBakeDate(now);
+}
 export function addDateDays(value, days) {
   if (!isISODate(value) || !Number.isInteger(days)) throw new Error('Invalid date');
   const date = new Date(value + 'T12:00:00Z');
