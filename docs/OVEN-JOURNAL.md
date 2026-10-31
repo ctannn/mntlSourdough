@@ -28,10 +28,11 @@ When no article has been published, visitors see a designed "Something good is i
 
 ## Underlying data model
 
-Supabase project \`dfyzpflempgtokyhvtlo\`. The two SQL migrations are tracked in:
+Supabase project \`dfyzpflempgtokyhvtlo\`. The three applied SQL migrations are tracked by the same version numbers used by Supabase:
 
 - [create_oven_journal.sql](../supabase/migrations/20261031031520_create_oven_journal.sql)
 - [blog_author_analytics_index.sql](../supabase/migrations/20261031032111_blog_author_analytics_index.sql)
+- [blog_public_column_privileges.sql](../supabase/migrations/20261031032248_blog_public_column_privileges.sql)
 
 The \`public.blog_posts\` table includes:
 
@@ -50,13 +51,13 @@ No user-controlled or public-submitted authorship claims are trusted. In a publi
 
 ### Row-level security
 
-- Anonymous visitors: **SELECT published content only**, dated no later than the current time. No anonymous INSERT, UPDATE, or DELETE grants.
+- Anonymous visitors: **SELECT published content only**, dated no later than the current time. Column-level grants expose only public editorial fields, never staff UUIDs or internal edit timestamps. No anonymous INSERT, UPDATE, or DELETE grants.
 - Authenticated staff: published content plus private drafts **only when \`public.staff.active\` is true**.
 - Active owner or baker: create/update and publish. Authorization is based on the trusted \`public.staff\` table, **never user-editable metadata**.
 - Owner: delete a draft. Published posts must be unpublished first.
 - Images: \`storage.buckets.id = 'mntl-oven'\` is a public-read bucket; only active owner/baker may upload supported image types (max 5 MiB). Uploads use randomly generated paths and do not upsert existing objects.
 
-Verification was performed in a **rolled-back DB transaction**: \`anon\` saw one test published row and zero test draft rows. After rollback, the real table contained **zero posts**. Publishing is entirely in the hands of MNTL staff.
+Verification was performed in a **rolled-back DB transaction**: \`anon\` saw one test published row and zero test draft rows. After rollback, the real table contained **zero posts**. A separate rollback-only test confirmed an active owner can create a draft, transition it to published, and receive database-stamped `created_by`, `updated_by` and `published_at`. Publishing is entirely in the hands of MNTL staff.
 
 ### Related analytics
 
