@@ -290,3 +290,10 @@ footer {background:var(--mntl-deep);color:#f6f7ec;}
 .header .nav a:hover{color:#a57446}
 @media(max-width:1180px){.header .nav a{font-size:9px}}
 @media(max-width:650px){.header .nav a{font-size:12px;padding:10px 5px}}
+
+
+/* Shop CTAs scroll to the order heading, with clearance for the sticky freshness bar. */
+#order .order-heading {scroll-margin-top: 55px;}
+@media (max-width:650px) {
+  #order .order-heading {scroll-margin-top: 50px;}
+}
