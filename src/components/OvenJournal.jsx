@@ -19,7 +19,7 @@ function NavBar() {
     <a href="/" className="oven-wordmark" aria-label="MNTL home">mntl<span>✳</span></a>
     <button type="button" className="oven-nav-toggle" onClick={()=>setMenu(v=>!v)} aria-expanded={menu} aria-label="Toggle navigation"><Menu size={20}/></button>
     <nav className={menu?'is-expanded':''} aria-label="Main navigation">
-      <a href="/#shop">SHOP</a><a href="/#subscription">BREAD CLUB</a><a href="/#story">ABOUT</a>
+      <a href="/#order">SHOP</a><a href="/#subscription">BREAD CLUB</a><a href="/#story">ABOUT</a>
       <a href="/oven" aria-current="page">THE OVEN <span className="oven-current-dot" aria-hidden="true">●</span></a>
     </nav>
     <a href="/#order" className="oven-shop-button">ORDER BREAD <ArrowUpRight size={15}/></a>
@@ -121,6 +121,6 @@ export function OvenJournal() {
       : state.loading?<section className="oven-loading" role="status">WARMING UP THE OVEN…</section>
       : state.error?<section className="oven-quiet-state" role="alert"><h1>We're having a little oven trouble.</h1><p>{state.error}</p><button className="oven-primary-link" onClick={()=>setRetry(n=>n+1)}>TRY AGAIN <ArrowRight size={17}/></button></section>
       : post?<JournalArticle post={post}/>:<JournalHome posts={state.posts}/>}
-    <section className="oven-journal-cta"><div><span>MNTL SOURDOUGH / CALGARY</span><h2>Less scrolling.<br/>More sourdough.</h2></div><a href="/#shop">SHOP THE LOAVES <ArrowUpRight size={18}/></a></section>
-  </main><footer className="oven-footer"><a className="oven-wordmark" href="/">mntl<span>✳</span></a><div><a href="/#shop">SHOP</a><a href="/#subscription">BREAD CLUB</a><a href="/#story">OUR STORY</a><a href="mailto:hello@runmntl.com">CONTACT</a></div><p>© {new Date().getFullYear()} MNTL SOURDOUGH · CALGARY, AB</p></footer></>;
+    <section className="oven-journal-cta"><div><span>MNTL SOURDOUGH / CALGARY</span><h2>Less scrolling.<br/>More sourdough.</h2></div><a href="/#order">SHOP THE LOAVES <ArrowUpRight size={18}/></a></section>
+  </main><footer className="oven-footer"><a className="oven-wordmark" href="/">mntl<span>✳</span></a><div><a href="/#order">SHOP</a><a href="/#subscription">BREAD CLUB</a><a href="/#story">OUR STORY</a><a href="mailto:hello@runmntl.com">CONTACT</a></div><p>© {new Date().getFullYear()} MNTL SOURDOUGH · CALGARY, AB</p></footer></>;
 }
