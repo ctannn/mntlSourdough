@@ -10,7 +10,8 @@ import './FulfillmentPlanner.css';
 // must be checked on the server before charging or confirming an order.
 const GOOGLE_JS_KEY = import.meta.env.VITE_GOOGLE_MAPS_JS_KEY || '';
 function mapSearch(address) {
-  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(address+', Calgary, Alberta, Canada');
+  const fullAddress=/,\s*Calgary\b/i.test(address)?address:address+', Calgary, Alberta, Canada';
+  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(fullAddress);
 }
 export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceChange, availability, pickupAddress}) {
   const [nowMs,setNowMs] = useState(()=>Date.now());
