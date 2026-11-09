@@ -1,7 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {GoogleAddressPicker} from './GoogleAddressPicker.jsx';
+import {AddressAutocomplete} from './AddressAutocomplete.jsx';
 import {OpenStreetAddressPicker} from './OpenStreetAddressPicker.jsx';
-import {CalendarDays, ChevronLeft, ChevronRight, MapPin, Search, Check, Truck} from 'lucide-react';
+import {CalendarDays, ChevronLeft, ChevronRight, MapPin, Check, Truck} from 'lucide-react';
 import {addDateDays, addDateMonths, calgaryToday, earliestCustomerBakeDate, isCustomerBakeDateAllowed, monthCells, occurrences, readableDate, cadenceLabel, validCadence} from '../lib/scheduling.mjs';
 import './FulfillmentPlanner.css';
 
@@ -9,7 +10,8 @@ import './FulfillmentPlanner.css';
 // must be checked on the server before charging or confirming an order.
 const GOOGLE_JS_KEY = import.meta.env.VITE_GOOGLE_MAPS_JS_KEY || '';
 function mapSearch(address) {
-  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(address+', Calgary, Alberta, Canada');
+  const fullAddress=/,\s*Calgary\b/i.test(address)?address:address+', Calgary, Alberta, Canada';
+  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(fullAddress);
 }
 export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceChange, availability, pickupAddress}) {
   const [nowMs,setNowMs] = useState(()=>Date.now());
@@ -23,8 +25,6 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
   const lastSelectable = addDateDays(today, 90);
   const hasExpiredSelection = Boolean(preference.date && !isCustomerBakeDateAllowed(preference.date,now));
   const [month, setMonth] = useState(preference.date ? preference.date.slice(0,7) : firstSelectable.slice(0,7));
-  const [searchText, setSearchText] = useState(preference.address || '');
-  const [searchError, setSearchError] = useState('');
   const availableByDate=useMemo(()=>new Map((availability?.dates||[]).map(x=>[x.date,x])),[availability]);
   const liveDates=Boolean(availability?.configured && (availability.dates||[]).some(x=>x.bookable));
   const set = patch => onPreferenceChange(previous => ({...previous,...patch}));
@@ -33,13 +33,6 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
   const scheduled = useMemo(() => mode==='subscription'?occurrences(preference.date, frequency, 4, cadence):[],[preference.date, frequency,preference.customInterval,preference.customUnit,mode]);
   const dayCells = useMemo(() => monthCells(month),[month]);
   const monthLabel = new Intl.DateTimeFormat('en-CA',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T12:00:00Z'));
-  function findAddress(event) {
-    event.preventDefault();
-    const query = searchText.trim();
-    if(query.length < 6){setSearchError('Please enter a full street address.');return;}
-    setSearchError('');
-    set({address:query});
-  }
   function calendarDay(date) {
     const outside = !date.startsWith(month);
     const disabled = date < firstSelectable || date > lastSelectable || (liveDates&&!availableByDate.get(date)?.bookable);
@@ -98,19 +91,30 @@ export function FulfillmentPlanner({mode, fulfillment, preference, onPreferenceC
     <div className="mntl-planner-block">
       <div className="mntl-planner-label"><span>{mode === 'subscription' ? '06' : '05'} — YOUR {fulfillment==='delivery'?'DELIVERY LOCATION':'PICKUP LOCATION'}</span>{fulfillment==='delivery'?<Truck size={17}/>:<MapPin size={17}/>}</div>
       {fulfillment==='delivery' ? <>
-        <p className="mntl-hint">Choose your home on the map or enter your address. We will confirm delivery eligibility and fees before payment.</p>
-        {GOOGLE_JS_KEY ? <GoogleAddressPicker value={preference} onChange={patch=>{set(patch);if(patch.address){setSearchText(patch.address)}}}/> : <>
-          <form className="mntl-address-search" onSubmit={findAddress}>
-            <label className="mntl-sr" htmlFor="mntl-address-query">Calgary street address</label>
-            <input id="mntl-address-query" value={searchText} onChange={e=>{setSearchText(e.target.value);set({address:e.target.value,location:null});}} placeholder="Street address, Calgary" autoComplete="street-address"/>
-            <button type="submit" aria-label="Preview address on map"><Search size={17}/><span>Preview address</span></button>
-          </form>
-          {searchError && <p className="mntl-error" role="status">{searchError}</p>}
+        <p className="mntl-hint">Start typing your Calgary street address to see suggestions, or enter it manually and adjust your entrance pin. Delivery eligibility and fees will be confirmed separately.</p>
+        {GOOGLE_JS_KEY ? <>
+          <GoogleAddressPicker value={preference} onChange={patch=>set(patch)}/>
+          <label className="mntl-field"><span>Delivery address (edit if needed)</span>
+            <input value={preference.address||''} onChange={e=>set({address:e.target.value,location:null,placeId:null,pinAdjusted:false})}
+              placeholder="Street, city, postal code" autoComplete="street-address"/>
+          </label>
+        </> : <>
+          <AddressAutocomplete
+            value={preference.address||''}
+            onChange={address=>set({address,location:null,placeId:null,pinAdjusted:false})}
+            onSelect={suggestion=>set({
+              address:suggestion.label,
+              location:{lat:suggestion.lat,lon:suggestion.lon},
+              placeId:null,
+              pinAdjusted:false
+            })}/>
           <OpenStreetAddressPicker value={preference} onChange={patch=>set(patch)}/>
-          {searchText.trim()&&<a className="mntl-map-open" href={mapSearch(searchText)} target="_blank" rel="noopener noreferrer">Find this street address on Google Maps ↗</a>}
-          <p className="mntl-hint">Tap the map to choose your entrance pin. For automatic address suggestions, the bakery can enable Google Places. Map pins are not delivery eligibility checks.</p>
+          {preference.address?.trim()&&
+            <a className="mntl-map-open" href={mapSearch(preference.address)} target="_blank" rel="noopener noreferrer">
+              Confirm this address on Google Maps ↗
+            </a>}
+          <p className="mntl-hint">Suggestions locate the approximate building, not its exact entrance. Adjust the map pin if needed; the bakery will confirm eligibility.</p>
         </>}
-        <label className="mntl-field"><span>Delivery address (edit if needed)</span><input value={preference.address || ''} onChange={e=>{set({address:e.target.value,location:null});setSearchText(e.target.value);setSearchError('');}} placeholder="Street, city, postal code" autoComplete="street-address"/></label>
         <label className="mntl-field"><span>Apartment, unit or delivery instructions <small>(optional)</small></span><input value={preference.instructions||''} onChange={e=>set({instructions:e.target.value})} placeholder="Unit number, buzzer, entrance..." /></label>
         <p className="mntl-hint">Delivery area and fees are not yet confirmed. Map previews do not verify deliverability.</p>
       </> : <div className="mntl-pickup-note"><MapPin size={19}/><p><strong>Pickup in Calgary</strong><br/>{pickupAddress?pickupAddress:'Exact pickup address, hours and directions will be provided before your order is confirmed.'}</p></div>}

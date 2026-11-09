@@ -71,6 +71,10 @@ No private API credentials are required to run the informational storefront loca
 
 The previous tiny thumbnails and an external Unsplash URL caused a broken/empty hero. **The hero and Original now use locally hosted full-resolution WebP images** in \`public/images/mntl-hero.webp\` and \`mntl-original.webp\`, with a fallback in the hero. They are generated concept photos, **not verified photos of finished MNTL inventory**. Replace them with real product photography before paid launch. Other variant images still use remote placeholders with local fallbacks. See [the design handoff](docs/BRAND-DESIGN.md).
 
+## Delivery address suggestions
+
+Calgary delivery customers can now type a street address and choose a suggested match. The address and map pin update together; manual edits clear stale location coordinates, and manual entry remains supported. See [delivery autocomplete documentation](docs/ADDRESS-AUTOCOMPLETE.md). Google Places is still an optional integration when a properly restricted browser key is configured.
+
 ## Customer bake-date notice
 
 Customer requests require **at least the following calendar day**: same-day pickup and delivery requests are blocked. Tomorrow is requestable only **before 6:00 PM Calgary time**, after which the earliest possible bake moves to the following day. The bakery's actual open dates, capacity, and earlier cutoffs still apply. This policy is enforced in the date picker, inquiry submission, availability API, secure checkout and the checkout-holds database trigger. Authorized staff manual orders are separate. See [Order lead-time engineering guide](docs/ORDER-LEAD-TIME.md).
