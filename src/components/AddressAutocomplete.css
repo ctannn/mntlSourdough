@@ -1,0 +1,19 @@
+/* A responsive accessible dropdown above the existing Leaflet map. */
+.mntl-address-autocomplete{position:relative;z-index:1001;isolation:isolate;margin:18px 0 12px}
+.mntl-address-label{display:block;font-size:11px;letter-spacing:.035em;font-weight:800;margin-bottom:9px;color:var(--mntl-ink,#233327)}
+.mntl-address-input-shell{display:flex;align-items:center;gap:9px;border:1px solid #9dab9b;background:#fffefa;padding:0 13px;min-height:53px}
+.mntl-address-input-shell:focus-within{border-color:#48694f;outline:2px solid #c7d8c3;outline-offset:1px}
+.mntl-address-input-shell>svg{flex-shrink:0;color:#718672}
+.mntl-address-input-shell input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#1b2b21;font-size:14px;padding:13px 0;min-height:50px}
+.mntl-address-input-shell input::placeholder{color:#7d8a7b}
+.mntl-address-loading{font-size:10px;white-space:nowrap;color:#627c60}
+.mntl-address-suggestions{position:absolute;top:calc(11px * 1.5 + 9px + 53px);left:0;right:0;background:#fffefa;border:1px solid #9bab9d;box-shadow:0 18px 35px #1b2a1b25;max-height:300px;overflow-y:auto;z-index:1002}
+.mntl-address-suggestions button{display:flex;width:100%;gap:10px;align-items:flex-start;background:#fffefa;border-bottom:1px solid #e6e9df;color:#22372b;text-align:left;padding:12px 13px;font-size:12px;line-height:1.55}
+.mntl-address-suggestions button:last-of-type{border-bottom:0}
+.mntl-address-suggestions button svg{flex-shrink:0;color:#637d63;margin-top:2px}
+.mntl-address-suggestions button:hover,.mntl-address-suggestions button.is-active{background:#e9f0e5}
+.mntl-address-suggestions button:focus-visible{outline:2px solid #527953;outline-offset:-3px}
+.mntl-address-feedback{font-size:12px;color:#5c6d5e;line-height:1.5;padding:14px}
+.mntl-address-guidance{font-size:12px;line-height:1.55;color:#5a6c5b;margin:9px 0 2px}
+.mntl-address-attribution{font-size:10px;line-height:1.5;color:#748574;margin:4px 0 14px}
+@media(max-width:600px){.mntl-address-autocomplete{margin-top:15px}.mntl-address-input-shell input{font-size:16px}.mntl-address-suggestions{max-height:260px}}
