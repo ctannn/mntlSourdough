@@ -297,3 +297,33 @@ footer {background:var(--mntl-deep);color:#f6f7ec;}
 @media (max-width:650px) {
   #order .order-heading {scroll-margin-top: 50px;}
 }
+
+
+/* 2026-11-10 conversion polish: direct product-to-order flow, not more noisy banners. */
+.product-photo-note{
+  grid-column:1/-1;color:#68796d;font-size:11px;line-height:1.6;
+  margin:7px 0 0;letter-spacing:.01em;
+}
+.order-steps{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:0;list-style:none;margin:-13px 0 37px;padding:0;
+  border-top:1px solid #b9cab9;border-bottom:1px solid #b9cab9;
+}
+.order-steps li{
+  display:flex;align-items:center;gap:14px;min-width:0;
+  padding:20px clamp(12px,2vw,25px) 20px 0;
+}
+.order-steps li+li{border-left:1px solid #c8d4c9;padding-left:clamp(12px,2vw,25px);}
+.order-step-number{
+  font:800 17px/1 var(--mntl-display,'DM Sans',sans-serif);
+  color:#8a6941;letter-spacing:-.035em;flex:none;
+}
+.order-steps li>span:last-child{display:grid;gap:4px;min-width:0}
+.order-steps strong{font-size:10px;font-weight:900;letter-spacing:.065em;color:#26382c;line-height:1.35}
+.order-steps small{font-size:11px;color:#67766a;line-height:1.35}
+.newsletter-clarity{display:block;font-size:11px;line-height:1.5;margin-top:12px;color:#567051}
+@media(max-width:700px){
+  .order-steps{grid-template-columns:1fr;gap:0;margin:-10px 0 31px;}
+  .order-steps li{padding:13px 0;}
+  .order-steps li+li{border-left:0;border-top:1px solid #d5ded1;padding:13px 0;}
+}
